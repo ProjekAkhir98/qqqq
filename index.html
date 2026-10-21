@@ -1,0 +1,2608 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>KELFA QUEST - Cover Home | Matematika Kelas V SD</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body {
+    width:100%; height:100%;
+    background:#060f2e;
+    overflow:hidden;
+    font-family: "Baloo 2", "Comic Sans MS", "Segoe UI", system-ui, sans-serif;
+    user-select:none;
+    -webkit-user-select:none;
+  }
+  /* Area luar stage (letterbox) */
+  #viewport {
+    position:fixed; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    background: radial-gradient(circle at 50% 40%, #10266b 0%, #060f2e 65%, #020618 100%);
+  }
+  /* STAGE TETAP 1920x1080 */
+  #stage {
+    width:1920px; height:1080px;
+    position:relative;
+    flex-shrink:0;
+    overflow:hidden;
+    background:#7ec8f7;
+    box-shadow: 0 0 80px rgba(0,0,0,.6);
+    transform-origin:center center;
+  }
+  #bg-cover {
+    position:absolute; inset:0;
+    width:1920px; height:1080px;
+    object-fit:fill;
+    display:block;
+  }
+
+  /* Tombol Mulai - bulat play, posisi podium tengah bawah */
+  #btn-mulai {
+    position:absolute;
+    left:50%; transform:translateX(-50%);
+    bottom:205px;
+    width:230px; height:230px;
+    cursor:pointer;
+    border:none; background:none; padding:0;
+    border-radius:50%;
+    filter: drop-shadow(0 12px 18px rgba(0,30,120,.45));
+    transition: transform .18s ease, filter .18s ease;
+    animation: popIn 0.9s cubic-bezier(.2,1.5,.3,1) .4s both,
+               floatY 2.8s ease-in-out 1.4s infinite;
+    z-index:5;
+  }
+  #btn-mulai img { width:100%; height:100%; display:block; pointer-events:none; border-radius:50%; transition:transform .12s ease, filter .12s ease; transform-origin:center; }
+  #btn-mulai:hover { transform:translateX(-50%) scale(1.06); filter: drop-shadow(0 16px 26px rgba(0,30,120,.55)) brightness(1.06); }
+  #btn-mulai:active { transform:translateX(-50%) scale(.94); }
+  #btn-mulai:active img { transform:scale(.86); filter:brightness(.88); }
+  /* class .pressed dipicu via JS untuk efek memantul + gelombang */
+  #btn-mulai.pressed img { animation:squash .42s cubic-bezier(.2,1.6,.3,1); }
+  #btn-setting.pressed img { animation:squash .42s cubic-bezier(.2,1.6,.3,1); }
+  #btn-tutup.pressed { animation:btnPop .38s cubic-bezier(.2,1.6,.3,1); }
+  .toggle.pressed { animation:btnPop .3s ease; }
+
+  @keyframes popIn {
+    from { opacity:0; transform:translateX(-50%) translateY(80px) scale(.7); }
+    to { opacity:1; transform:translateX(-50%) translateY(0) scale(1); }
+  }
+  @keyframes floatY {
+    0%,100% { margin-bottom:0; }
+    50% { margin-bottom:14px; }
+  }
+
+  /* Tombol Pengaturan kiri atas (sejajar dengan tombol Informasi Pengembang) */
+  #btn-setting {
+    position:absolute;
+    top:36px; left:188px;
+    width:118px; height:118px;
+    border:none; background:none; cursor:pointer;
+    z-index:6;
+    transition: transform .18s ease;
+    animation: popIn2 .7s cubic-bezier(.2,1.5,.3,1) .7s both;
+  }
+  #btn-setting img { width:100%; height:100%; display:block; pointer-events:none; filter: drop-shadow(0 8px 12px rgba(0,0,0,.35)); transition:transform .12s ease; transform-origin:center; }
+  #btn-setting:hover { transform:scale(1.1) rotate(15deg); }
+  #btn-setting:active { transform:scale(.88) rotate(5deg); }
+  #btn-setting:active img { transform:scale(.86); filter:brightness(.9); }
+  @keyframes popIn2 { from { opacity:0; transform:scale(.5);} to { opacity:1; transform:scale(1);} }
+
+  /* Tombol Informasi Pengembang kiri atas (hanya di layar Home) */
+  #btn-info {
+    position:absolute;
+    top:36px; left:42px;
+    width:118px; height:118px;
+    border:none; background:none; cursor:pointer; padding:0;
+    z-index:6; overflow:visible;
+    transition: transform .18s ease;
+    animation: popIn2 .7s cubic-bezier(.2,1.5,.3,1) .55s both;
+  }
+  #btn-info img { width:100%; height:100%; display:block; object-fit:contain; pointer-events:none;
+    filter: drop-shadow(0 8px 12px rgba(0,0,0,.35)); transition:transform .12s ease; transform-origin:center; }
+  #btn-info:hover { transform:scale(1.1); }
+  #btn-info:active { transform:scale(.88); }
+  #btn-info:active img { transform:scale(.86); filter:brightness(.9); }
+  #btn-info.pressed img { animation:squash .42s cubic-bezier(.2,1.6,.3,1); }
+  #btn-info .press-ring { border-radius:50%; }
+
+  /* Logo instansi kanan atas (hanya di layar Home) */
+  #logo-instansi {
+    position:absolute;
+    top:50px; right:0;
+    width:560px; height:auto;
+    border-radius:16px;
+    z-index:6;
+    filter: drop-shadow(0 8px 14px rgba(0,0,0,.32));
+    animation: logoIn .7s cubic-bezier(.2,1.5,.3,1) .8s both;
+  }
+  @keyframes logoIn { from { opacity:0; transform:translateX(50px); } to { opacity:1; transform:translateX(0); } }
+
+  /* ===== EFEK PENCET UNIVERSAL: squash + gelombang + partikel ===== */
+  @keyframes squash {
+    0% { transform:scale(1,1); }
+    30% { transform:scale(.82,.82); }
+    55% { transform:scale(1.14,1.14); }
+    75% { transform:scale(.94,.94); }
+    100% { transform:scale(1,1); }
+  }
+  @keyframes btnPop {
+    0% { transform:scale(1); }
+    35% { transform:scale(.88); }
+    60% { transform:scale(1.08); }
+    100% { transform:scale(1); }
+  }
+  #btn-mulai, #btn-setting, #btn-tutup { overflow:visible; }
+  #btn-tutup { position:relative; }
+  .press-ring {
+    position:absolute; left:50%; top:50%;
+    width:100%; height:100%;
+    border:6px solid rgba(255,210,60,.95);
+    border-radius:50%;
+    transform:translate(-50%,-50%) scale(.7);
+    opacity:.95; pointer-events:none; z-index:10;
+    animation:ringOut .55s ease-out forwards;
+  }
+  #btn-tutup .press-ring { border-radius:999px; }
+  @keyframes ringOut {
+    to { transform:translate(-50%,-50%) scale(1.65); opacity:0; }
+  }
+  .press-star {
+    position:absolute; left:50%; top:50%;
+    width:16px; height:16px; margin:-8px;
+    background:radial-gradient(circle, #fff 0 30%, #ffd93c 45%, transparent 70%);
+    clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);
+    pointer-events:none; z-index:11;
+    animation:starFly .6s ease-out forwards;
+  }
+  @keyframes starFly {
+    from { transform:translate(0,0) scale(.6) rotate(0); opacity:1; }
+    to { transform:translate(var(--dx),var(--dy)) scale(1.4) rotate(180deg); opacity:0; }
+  }
+
+  /* Badge Fase C - kiri bawah info (pure CSS, tidak menutup aset) */
+  #fase-hint {
+    position:absolute; left:42px; bottom:30px;
+    z-index:4;
+    color:#fff; font-weight:800; font-size:22px;
+    letter-spacing:.5px;
+    text-shadow: 0 2px 0 #0b2a8a, 0 4px 12px rgba(0,0,0,.5);
+    background:rgba(8,30,110,.55);
+    border:2px solid rgba(255,255,255,.7);
+    padding:10px 22px; border-radius:999px;
+    backdrop-filter: blur(4px);
+  }
+
+  /* Hint klik untuk audio */
+  #audio-hint {
+    position:absolute; left:50%; top:22px; transform:translateX(-50%);
+    z-index:4;
+    background:rgba(0,20,80,.65); color:#ffe27a;
+    font-size:20px; font-weight:700;
+    padding:10px 26px; border-radius:999px;
+    border:1.5px solid rgba(255,226,122,.7);
+    display:none;
+  }
+
+  /* ===== MODAL PENGATURAN ===== */
+  #overlay {
+    position:absolute; inset:0; z-index:20;
+    background:rgba(4,12,45,.65);
+    display:none; align-items:center; justify-content:center;
+    backdrop-filter: blur(3px);
+  }
+  #overlay.show { display:flex; }
+  #panel-setting {
+    width:720px;
+    background: linear-gradient(180deg, #1a56d6 0%, #0d2fa0 100%);
+    border:10px solid #ffb300;
+    outline:6px solid #7a4a12;
+    border-radius:36px;
+    padding:38px 48px 42px;
+    color:#fff;
+    box-shadow:0 30px 60px rgba(0,0,0,.5);
+    animation: panelIn .35s cubic-bezier(.2,1.4,.3,1);
+    position:relative;
+  }
+  @keyframes panelIn { from { transform:scale(.8) translateY(30px); opacity:0;} to { transform:scale(1) translateY(0); opacity:1;} }
+  #panel-setting h2 {
+    text-align:center; font-size:52px; line-height:1;
+    color:#fff; -webkit-text-stroke:2px #0a205f;
+    text-shadow:0 4px 0 #0a205f, 0 6px 0 rgba(0,0,0,.25);
+    margin-bottom:8px; letter-spacing:1px;
+  }
+  #panel-setting p.sub { text-align:center; color:#ffe27a; font-weight:700; font-size:22px; margin-bottom:28px; }
+  .row-setting {
+    display:flex; align-items:center; justify-content:space-between;
+    background:rgba(255,255,255,.12);
+    border:2px solid rgba(255,255,255,.35);
+    border-radius:20px; padding:18px 24px; margin-bottom:18px;
+    font-size:28px; font-weight:800;
+  }
+  .toggle {
+    width:110px; height:56px; border-radius:999px;
+    background:#5a6a8a; border:3px solid #fff;
+    position:relative; cursor:pointer; transition:.2s;
+    flex-shrink:0;
+  }
+  .toggle::after {
+    content:""; position:absolute; top:4px; left:5px;
+    width:42px; height:42px; border-radius:50%;
+    background:#fff; transition:.2s;
+    box-shadow:0 3px 6px rgba(0,0,0,.3);
+  }
+  .toggle.on { background:#22c55e; }
+  .toggle.on::after { left:55px; }
+  #vol { width:100%; height:14px; accent-color:#ffb300; cursor:pointer; }
+  #btn-tutup {
+    display:block; margin:26px auto 0;
+    font-size:30px; font-weight:900; color:#0a2a8a;
+    background:linear-gradient(180deg,#ffe27a,#ffb300);
+    border:none; border-radius:999px; padding:16px 86px;
+    cursor:pointer; box-shadow:0 8px 0 #7a4a12, 0 12px 20px rgba(0,0,0,.3);
+    transition:.15s;
+  }
+  #btn-tutup:hover { transform:scale(1.05); }
+  #btn-tutup:active { transform:translateY(4px); box-shadow:0 4px 0 #7a4a12; }
+
+  /* ===== MODAL INFORMASI PENGEMBANG ===== */
+  #overlay-dev {
+    position:absolute; inset:0; z-index:22;
+    background:rgba(4,12,45,.65);
+    display:none; align-items:center; justify-content:center;
+    backdrop-filter: blur(3px);
+  }
+  #overlay-dev.show { display:flex; }
+  #panel-dev {
+    position:relative;
+    width:1720px;
+    filter: drop-shadow(0 24px 44px rgba(0,0,0,.45));
+    animation: panelIn .35s cubic-bezier(.2,1.4,.3,1);
+  }
+  #panel-dev .papan { width:100%; display:block; pointer-events:none; }
+  #panel-dev .dev-content {
+    position:absolute; left:58px; right:58px; top:38px; bottom:44px;
+    display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
+    gap:10px; text-align:left;
+    overflow-y:auto; padding:8px 18px 12px 8px; scrollbar-width:thin;
+  }
+  #panel-dev .dev-content::-webkit-scrollbar { width:14px; }
+  #panel-dev .dev-content::-webkit-scrollbar-track { background:rgba(10,42,138,.08); border-radius:999px; }
+  #panel-dev .dev-content::-webkit-scrollbar-thumb { background:#f59e0b; border-radius:999px; }
+  #panel-dev .dev-judul {
+    font-size:60px; font-weight:900; letter-spacing:2px; color:#0a2a8a; text-align:center;
+    margin-bottom:6px;
+  }
+  #panel-dev .dev-sub {
+    font-size:45px; font-weight:800; color:#c2410c; text-align:center;
+  }
+  #panel-dev p.dev-par {
+    font-size:35px; line-height:1.55; color:#1e3a8a; margin:0; text-align:justify;
+  }
+  #panel-dev .dev-id-row {
+    width:auto; display:flex; align-items:center; gap:26px; margin-top:4px;
+  }
+  #panel-dev .dev-id {
+    width:auto; border-collapse:collapse; margin-top:0;
+  }
+  #panel-dev .dev-foto {
+    height:300px; width:auto; flex-shrink:0;
+    filter: drop-shadow(0 8px 16px rgba(0,0,0,.3));
+  }
+  #panel-dev .dev-id td {
+    font-size:35px; color:#1e3a8a; padding:1px 2px; vertical-align:top;
+  }
+  #panel-dev .dev-id td.c1 { width:8px; white-space:nowrap; }
+  #panel-dev .dev-id td.c2 { width:430px; font-weight:700; white-space:nowrap; padding-right:8px; }
+  #panel-dev .dev-id td.c3 { width:18px; white-space:nowrap; }
+  #panel-dev .dev-ttd {
+    align-self:flex-end; margin-top:4px; text-align:left;
+  }
+  #panel-dev .dev-ttd p { font-size:35px; line-height:1.5; color:#1e3a8a; margin:0 0 10px; text-align:justify; }
+  #panel-dev .dev-ttd strong { font-size:36px; color:#0a2a8a; }
+  #btn-tutup-dev {
+    position:absolute; left:0; right:0; bottom:10px; margin:0 auto; width:max-content;
+    font-size:28px; font-weight:900; color:#0a2a8a;
+    background:linear-gradient(180deg,#ffe27a,#ffb300);
+    border:none; border-radius:999px; padding:14px 70px;
+    cursor:pointer; box-shadow:0 8px 0 #7a4a12, 0 12px 20px rgba(0,0,0,.3);
+    transition:.15s; overflow:visible; z-index:3;
+  }
+  #btn-tutup-dev:hover { transform:scale(1.05); }
+  #btn-tutup-dev:active { transform:translateY(4px); box-shadow:0 4px 0 #7a4a12; }
+  #btn-tutup-dev .press-ring { border-radius:999px; }
+
+  /* Toast kecil untuk navigasi berikutnya */
+  #toast {
+    position:absolute; left:50%; bottom:26px; transform:translateX(-50%) translateY(20px);
+    background:#0a205f; color:#fff; font-size:22px; font-weight:700;
+    padding:14px 30px; border-radius:999px; border:2px solid #ffb300;
+    opacity:0; pointer-events:none; transition:.3s; z-index:30; white-space:nowrap;
+  }
+  #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+  /* ===== LAYAR HOME & MENU (SPA, tetap 1920x1080) ===== */
+  .screen { position:absolute; inset:0; transition:opacity .45s ease; opacity:0; pointer-events:none; }
+  .screen.active { opacity:1; pointer-events:auto; }
+  #screen-home { z-index:1; }
+  #screen-intro { z-index:2; }
+  #screen-tujuan { z-index:3; }
+  #screen-menu { z-index:4; }
+  #screen-next { z-index:5; }
+  #screen-lanjut { z-index:6; }
+  .bg-full { position:absolute; inset:0; width:1920px; height:1080px; object-fit:fill; display:block; }
+  /* Navigasi kiri atas khusus menu */
+  .nav-topleft { position:absolute; top:36px; left:42px; display:flex; gap:22px; z-index:6; }
+  .nav-btn {
+    width:118px; height:118px;
+    border:none; background:none; cursor:pointer; padding:0; overflow:visible;
+    transition:transform .18s ease;
+    animation:popIn2 .7s cubic-bezier(.2,1.5,.3,1) .3s both;
+  }
+  .nav-btn img { width:100%; height:100%; display:block; pointer-events:none; border-radius:50%;
+    filter:drop-shadow(0 8px 12px rgba(0,0,0,.35)); transition:transform .12s ease; }
+  .nav-btn:hover { transform:scale(1.1); }
+  .nav-btn:active { transform:scale(.88); }
+  .nav-btn:active img { transform:scale(.86); filter:brightness(.9); }
+  .nav-btn.pressed img { animation:squash .42s cubic-bezier(.2,1.6,.3,1); }
+
+  /* ===== SLIDE 1: MATERI KELIPATAN (di layar Menu Materi) ===== */
+  .materi-panel {
+    position:absolute; left:250px; top:112px; width:1440px; height:812px;
+    background:#fffdf6; border:9px solid #ffb300; outline:5px solid #8a5a12; border-radius:34px;
+    box-shadow:0 24px 50px rgba(0,20,90,.35);
+    display:flex; overflow:hidden; z-index:4;
+  }
+  .materi-teks {
+    width:700px; padding:24px 22px 28px 34px; overflow-y:auto;
+    color:#12307a; scrollbar-width:thin;
+  }
+  .materi-teks::-webkit-scrollbar { width:12px; }
+  .materi-teks::-webkit-scrollbar-thumb { background:#f59e0b; border-radius:999px; }
+  .materi-teks h2 { margin:0 0 10px; font-size:36px; font-weight:900; color:#0a2a8a; }
+  .materi-teks h3 { margin:16px 0 8px; font-size:29px; font-weight:900; color:#0a2a8a; }
+  .materi-teks p { margin:0 0 12px; font-size:23px; line-height:1.45; text-align:justify; }
+  /* daftar kegiatan Dimas di panel kiri: dibuat lebih besar */
+  .materi-teks .kegiatan {
+    margin:6px 0 14px; padding-left:30px;
+    font-size:31px; line-height:1.45; font-weight:800; color:#0a2a8a;
+  }
+  .materi-teks .kegiatan li { margin:5px 0; }
+  .materi-teks .kegiatan li b { color:#1a56d6; }
+  .chip-list { display:flex; flex-wrap:wrap; gap:10px; margin:0 0 14px; }
+  .chip {
+    background:#1a56d6; color:#fff; font-size:22px; font-weight:800;
+    padding:8px 16px; border-radius:999px; box-shadow:0 4px 0 #0d2fa0;
+  }
+  .materi-teks .rantai {
+    font-size:24px; font-weight:900; color:#0a2a8a; letter-spacing:1px; text-align:center;
+    background:#e8f1ff; border-radius:16px; padding:10px 12px; margin:0 0 12px;
+  }
+  .materi-teks .rantai .tambah { color:#e07b00; }
+
+  /* ===== SLIDE PEMANTIK (Kapan Keduanya Menyala Bersamaan?) =====
+     Dibagi 2 panel: panel kiri = lampu + timer (tetap, tidak ikut scroll),
+     panel kanan = daftar soal (hanya panel ini yang di-scroll) */
+  .materi-panel.satu .materi-teks { width:100%; }
+  .materi-panel.satu .materi-lampu {
+    flex:none; width:520px; padding:24px 24px 22px 30px;
+    display:flex; flex-direction:column; overflow-y:auto; scrollbar-width:thin;
+  }
+  .materi-panel.satu .materi-lampu::-webkit-scrollbar { width:12px; }
+  .materi-panel.satu .materi-lampu::-webkit-scrollbar-thumb { background:#f59e0b; border-radius:999px; }
+  .materi-panel.satu .materi-soal {
+    flex:1; min-width:0; border-left:5px dashed #d9c48a;
+  }
+  .materi-teks .pemicu {
+    display:flex; align-items:center; gap:16px; margin:0 0 14px;
+    background:#e8f1ff; border:3px dashed #1a56d6; border-radius:20px; padding:12px 20px;
+  }
+  .materi-teks .pemicu .ikon { font-size:46px; line-height:1; flex:none; }
+  .materi-teks .pemicu .tanya { font-size:31px; font-weight:900; color:#0d2a8a; text-align:left; }
+  .materi-teks .lampu-kartu { display:flex; gap:14px; margin:0 0 14px; }
+  .materi-teks .lampu-kartu > div {
+    flex:1; display:flex; align-items:center; gap:12px;
+    background:#fffdf6; border:3px solid #ffb300; border-radius:18px; padding:12px 16px;
+  }
+  .materi-teks .lampu-kartu b { font-size:24px; line-height:1.3; text-align:left; }
+  .materi-teks .lampu-a b { color:#1a56d6; }
+  .materi-teks .lampu-b b { color:#b45309; }
+  /* lampu sungguhan: kaca + screwed base, menyala = barrieris + glowing */
+  .materi-teks .lampu-kartu .lampu { flex:none; width:46px; display:flex; flex-direction:column; align-items:center; }
+  .materi-teks .lampu-kartu .lampu .kaca {
+    width:46px; height:46px; border-radius:50%;
+    background:#cbd5e1; border:4px solid #94a3b8;
+    transition:background .2s ease, border-color .2s ease, box-shadow .2s ease;
+  }
+  .materi-teks .lampu-kartu .lampu .dok {
+    width:22px; height:10px; margin-top:2px; border-radius:0 0 5px 5px;
+    background:#94a3b8; transition:background .2s ease;
+  }
+  .materi-teks .lampu-kartu .lampu.nyala .kaca {
+    background:radial-gradient(circle at 35% 30%, #fffbeb, #fde047 55%, #f59e0b);
+    border-color:#f59e0b;
+    box-shadow:0 0 0 5px rgba(253,224,71,.35), 0 0 30px 12px rgba(250,204,21,.75);
+  }
+  .materi-teks .lampu-kartu .lampu.nyala .dok { background:#f59e0b; }
+  /* panel lampu sempit -> kartu A dan B disusun ke bawah, timer diringkas */
+  .materi-panel.satu .materi-lampu h2 { margin-bottom:6px; }
+  .materi-panel.satu .materi-lampu p { margin-bottom:10px; }
+  .materi-panel.satu .materi-lampu .lampu-kartu { flex-direction:column; gap:10px; margin-bottom:10px; }
+  .materi-panel.satu .materi-lampu .lampu-kartu > div { padding:10px 16px; }
+  .materi-panel.satu .materi-lampu .pemicu { padding:9px 14px; gap:12px; margin-bottom:10px; }
+  .materi-panel.satu .materi-lampu .pemicu .ikon { font-size:38px; }
+  .materi-panel.satu .materi-lampu .pemicu .tanya { font-size:26px; }
+  /* timer + tombol mulai di bawah lampu */
+  .materi-teks .lampu-panel {
+    display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:14px 20px;
+    background:#fffdf6; border:3px solid #ffb300; border-radius:20px; padding:12px 20px; margin:0 0 14px;
+  }
+  .materi-teks .lampu-panel .satuan { font-size:25px; font-weight:900; color:#0a2a8a; }
+  .materi-teks .lampu-panel .angka {
+    font-size:46px; font-weight:900; line-height:1; color:#e07b00;
+    min-width:64px; text-align:right; font-variant-numeric:tabular-nums;
+  }
+  .materi-teks .tombol-lampu {
+    font-family:inherit; font-size:24px; font-weight:900; color:#fff; background:#22c55e;
+    border:none; border-radius:999px; padding:10px 28px; cursor:pointer;
+    box-shadow:0 5px 0 #15803d; transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .materi-teks .tombol-lampu:hover { transform:translateY(-2px); }
+  .materi-teks .tombol-lampu:active { transform:translateY(3px); box-shadow:0 2px 0 #15803d; }
+  .materi-teks .tombol-lampu.ulang { background:#1a56d6; box-shadow:0 5px 0 #0d2fa0; }
+  .materi-teks .tombol-lampu.ulang:active { box-shadow:0 2px 0 #0d2fa0; }
+  .materi-teks .tombol-lampu:disabled { opacity:.4; cursor:not-allowed; transform:none; box-shadow:0 5px 0 #888; }
+  /* panel lampu: timer + tombol tetap muat dalam kolom sempit */
+  .materi-panel.satu .materi-lampu .lampu-panel { gap:10px 12px; padding:10px 14px; margin-bottom:10px; }
+  .materi-panel.satu .materi-lampu .lampu-panel .satuan { font-size:23px; }
+  .materi-panel.satu .materi-lampu .lampu-panel .angka { font-size:40px; min-width:52px; }
+  .materi-panel.satu .materi-lampu .tombol-lampu { font-size:22px; padding:9px 22px; }
+  /* pengingat di bawah panel lampu */
+  .materi-panel.satu .materi-lampu .ingat {
+    margin-top:auto; font-size:20px; font-weight:800; text-align:left; color:#8a5a12;
+    background:#fff3d6; border:3px dashed #ffb300; border-radius:16px; padding:10px 14px;
+  }
+  /* 4 pertanyaan pemantik: anak mengisi sendiri lewat grid angka */
+  .materi-teks .sembunyi { display:none; }
+  .materi-teks .tanya-jawab {
+    background:#fffdf6; border:3px solid #b9cdf2; border-radius:18px;
+    padding:12px 18px; margin:0 0 14px;
+  }
+  .materi-teks .tanya-jawab .tanya {
+    display:flex; align-items:center; gap:12px; margin:0;
+    font-size:24px; font-weight:900; color:#0d2a8a; text-align:left; line-height:1.3;
+  }
+  .materi-teks .tanya-jawab .tanya .no {
+    flex:none; width:38px; height:38px; border-radius:50%; background:#1a56d6; color:#fff;
+    font-size:21px; display:flex; align-items:center; justify-content:center;
+  }
+  .materi-teks .tanya-jawab .tanya .jml {
+    flex:none; margin-left:auto; font-size:20px; font-weight:800; color:#e07b00;
+  }
+  .materi-teks .grid-angka {
+    display:grid; grid-template-columns:repeat(10, 1fr); gap:6px; margin:12px 0 10px;
+  }
+  .materi-teks .grid-angka .num {
+    font-family:inherit; font-size:30px; font-weight:800; color:#12307a; background:#eef4ff;
+    border:2px solid #b9cdf2; border-radius:12px; padding:8px 0; cursor:pointer;
+    transition:transform .1s ease, background .18s ease, border-color .18s ease, color .18s ease;
+  }
+  .materi-teks .grid-angka .num:hover { transform:scale(1.08); }
+  .materi-teks .grid-angka .num:active { transform:scale(.92); }
+  .materi-teks .grid-angka .num.dipilih { background:#1a56d6; border-color:#0d2fa0; color:#fff; }
+  .materi-teks .grid-angka .num.benar    { background:#22c55e; border-color:#15803d; color:#fff; }
+  .materi-teks .grid-angka .num.salah    { background:#e11d48; border-color:#9f1239; color:#fff; }
+  .materi-teks .grid-angka .num.terlewat { background:#fef3c7; border-color:#e07b00; color:#8a5a12; }
+  .materi-teks .aksi { display:flex; align-items:center; flex-wrap:wrap; gap:12px; }
+  .materi-teks .aksi .periksa, .materi-teks .aksi .hapus-btn {
+    font-family:inherit; font-size:21px; font-weight:900; color:#fff; background:#1a56d6;
+    border:none; border-radius:999px; padding:8px 22px; cursor:pointer; box-shadow:0 4px 0 #0d2fa0;
+  }
+  .materi-teks .aksi .periksa:active, .materi-teks .aksi .hapus-btn:active { transform:translateY(2px); }
+  .materi-teks .aksi .hapus-btn { background:#94a3b8; box-shadow:0 4px 0 #64748b; }
+  .materi-teks .aksi .hasil { font-size:21px; font-weight:800; color:#166534; text-align:left; }
+  .materi-teks .petunjuk {
+    font-size:21px; font-weight:800; color:#8a5a12; text-align:left;
+    background:#fff3d6; border:3px dashed #e07b00; border-radius:16px; padding:8px 16px; margin:0 0 14px;
+  }
+  .materi-teks .jembatan {
+    background:#fef3c7; border:3px dashed #f59e0b; border-radius:20px; padding:12px 18px; margin:0 0 18px;
+  }
+  .materi-teks .jembatan p { margin:0; font-weight:800; color:#78350f; }
+  .materi-teks .mulai {
+    font-size:27px; font-weight:900; color:#fff; background:#1a56d6; text-align:center;
+    border-radius:999px; padding:12px 26px; box-shadow:0 5px 0 #0d2fa0;
+  }
+  .papan-bagian {
+    flex:1; padding:14px 22px 12px 24px; border-left:5px dashed #d9c48a;
+    display:flex; flex-direction:column; align-items:center;
+    overflow-y:auto; overflow-x:hidden; scrollbar-width:thin;
+  }
+  .papan-bagian::-webkit-scrollbar { width:12px; }
+  .papan-bagian::-webkit-scrollbar-thumb { background:#f59e0b; border-radius:999px; }
+  .papan-bagian h3 { margin:0 0 6px; font-size:25px; line-height:1.2; font-weight:900; color:#0a2a8a; align-self:flex-start; flex:none; }
+  .papan-grid {
+    display:grid; grid-template-columns:repeat(10,1fr); gap:4px;
+    width:100%; max-width:100%; flex:none;
+  }
+  .papan-grid b {
+    display:flex; align-items:center; justify-content:center;
+    aspect-ratio:1/1; font-size:28px; font-weight:800; color:#12307a;
+    background:#eef4ff; border:2px solid #b9cdf2; border-radius:12px; cursor:pointer;
+    transition:transform .12s ease, background .2s ease, color .2s ease;
+  }
+  .papan-grid b:hover { background:#dbe8ff; transform:scale(1.07); }
+  .papan-grid b:active { transform:scale(.9); }
+  .papan-grid b.on { background:#22c55e; border-color:#15803d; color:#fff; }
+  .papan-grid b.pilih {
+    background:#22c55e; border-color:#15803d; color:#fff; transform:scale(1.12);
+    box-shadow:0 0 0 4px rgba(34,197,94,.45);
+  }
+  .papan-info {
+    margin-top:8px; width:100%; flex:none;
+    font-size:35px; line-height:1.25; font-weight:800; color:#0a2a8a;
+    background:#e8f1ff; border-radius:14px; padding:6px 12px; min-height:38px; text-align:center;
+  }
+
+  /* ===== SLIDE 2: MATERI KELIPATAN PERSEKUTUAN ===== */
+  .materi-teks .remind { background:#fff3d6; color:#8a5a12; }
+  .materi-teks .remind b { color:#e07b00; }
+  .papan-legend {
+    display:flex; flex-wrap:wrap; gap:10px 22px; margin:0 0 8px; flex:none; align-self:flex-start;
+  }
+  .papan-legend span { display:flex; align-items:center; gap:10px; font-size:25px; font-weight:800; color:#0a2a8a; }
+  .papan-legend i { width:25px; height:25px; border-radius:6px; display:block; border:2px solid rgba(0,0,0,.15); flex:none; }
+  .lg-a { background:#2f7bff; }
+  .lg-b { background:#ff8a00; }
+  .lg-c { background:#22c55e; }
+  .lg-k { background:#e11d48; }
+  /* ===== KALENDER OKTOBER 2026 (tantangan jadwal Dimas) ===== */
+  .kalender-wrap {
+    width:100%; flex:none; background:#fff; border:3px solid #b9cdf2;
+    border-radius:16px; padding:10px 12px 12px; box-sizing:border-box;
+  }
+  .kalender-judul { text-align:center; font-size:26px; font-weight:900; color:#0a2a8a; margin:0 0 8px; }
+  .kalender-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:5px; }
+  .kalender-grid .hari {
+    display:flex; align-items:center; justify-content:center;
+    font-size:16px; font-weight:900; color:#1a56d6; padding:2px 0;
+  }
+  .kalender-grid .kal-blank { display:block; }
+  .kalender-grid .tgl {
+    display:flex; align-items:center; justify-content:center; aspect-ratio:1/1;
+    font-size:23px; font-weight:800; color:#12307a;
+    background:#eef4ff; border:2px solid #b9cdf2; border-radius:10px; cursor:pointer;
+    transition:transform .12s ease, background .2s ease, color .2s ease;
+  }
+  .kalender-grid .tgl:hover { background:#dbe8ff; transform:scale(1.06); }
+  .kalender-grid .tgl:active { transform:scale(.92); }
+  .kalender-grid .tgl.on-a { background:#2f7bff; border-color:#1b4fd0; color:#fff; }
+  .kalender-grid .tgl.on-b { background:#ff8a00; border-color:#b45309; color:#fff; }
+  .kalender-grid .tgl.on-c { background:#22c55e; border-color:#15803d; color:#fff; }
+  .kalender-grid .tgl.tumpuk { background:#e11d48; border-color:#9f1239; color:#fff; }
+  .kalender-kontrol { display:flex; flex-wrap:wrap; gap:8px; margin:10px 0 8px; justify-content:center; }
+  .kalender-kontrol .tanda-btn {
+    font-family:inherit; font-size:18px; font-weight:900; color:#0a2a8a;
+    background:#e8f1ff; border:3px solid #b9cdf2; border-radius:999px;
+    padding:6px 14px; cursor:pointer;
+  }
+  .kalender-kontrol .tanda-btn.t-a.on { background:#2f7bff; border-color:#1b4fd0; color:#fff; }
+  .kalender-kontrol .tanda-btn.t-b.on { background:#ff8a00; border-color:#b45309; color:#fff; }
+  .kalender-kontrol .tanda-btn.t-c.on { background:#22c55e; border-color:#15803d; color:#fff; }
+  .kalender-kontrol .tanda-btn.t-reset { background:#94a3b8; border-color:#64748b; color:#fff; box-shadow:0 3px 0 #64748b; }
+  .kalender-kontrol .tanda-btn.t-reset:active { transform:translateY(2px); }
+  #info-kalender { font-size:22px; }
+  /* bilangan yang sedang dipilih TETAP memakai warna serinya (a = biru, b = orange),
+     hanya dibesarin + diberi cincin agar jelas diteken. */
+  .papan-grid b.on-a { background:#2f7bff; border-color:#1b4fd0; color:#fff; }
+  .papan-grid b.on-b { background:#ff8a00; border-color:#b45309; color:#fff; }
+  .papan-grid b.on-k { background:#e11d48; border-color:#9f1239; color:#fff; }
+  .papan-grid b.pilih-a {
+    background:#2f7bff; border-color:#1b4fd0; color:#fff; transform:scale(1.14);
+    box-shadow:0 0 0 4px rgba(47,123,255,.45);
+  }
+  .papan-grid b.pilih-b {
+    background:#ff8a00; border-color:#b45309; color:#fff; transform:scale(1.14);
+    box-shadow:0 0 0 4px rgba(255,138,0,.45);
+  }
+
+  /* ===== SLIDE LANJUTAN: PAPAN ANGKA LATIHAN (A/B/C, diisi sendiri) ===== */
+  .papan-kontrol { margin:4px 0 14px; }
+  .kontrol-baris { display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin:0 0 10px; }
+  .kontrol-baris > span { flex:none; font-size:23px; font-weight:800; color:#0a2a8a; }
+  .jml-btn {
+    font-family:inherit; font-size:24px; font-weight:900; color:#0a2a8a; background:#e8f1ff;
+    border:3px solid #b9cdf2; border-radius:12px; width:54px; height:48px; cursor:pointer;
+  }
+  .jml-btn.on { background:#1a56d6; border-color:#0d2fa0; color:#fff; }
+  .kontrol-slot { display:flex; flex-wrap:wrap; gap:12px; }
+  .kontrol-slot .bil-item {
+    display:flex; flex-direction:column; align-items:center; gap:6px;
+    width:196px; padding:8px 12px 10px; background:#fff;
+    border:3px solid #b9cdf2; border-radius:16px; transition:outline-color .12s ease;
+  }
+  .kontrol-slot .bil-item.sembunyi { display:none; }
+  .kontrol-slot .bil-atas { display:flex; align-items:center; gap:8px; }
+  .kontrol-slot .bil-item i {
+    width:20px; height:20px; border-radius:6px; display:block; border:2px solid rgba(0,0,0,.15);
+  }
+  .kontrol-slot .bil-item b { font-size:23px; font-weight:900; color:#0a2a8a; }
+  .kontrol-slot .bil-item.s-a i { background:#2f7bff; }
+  .kontrol-slot .bil-item.s-b i { background:#ff8a00; }
+  .kontrol-slot .bil-item.s-c i { background:#22c55e; }
+  .kontrol-slot .pilih-tanda {
+    font-family:inherit; font-size:17px; font-weight:900; color:#0a2a8a; background:#e8f1ff;
+    border:3px solid #b9cdf2; border-radius:999px; padding:3px 12px; cursor:pointer;
+  }
+  .kontrol-slot .pilih-tanda:disabled { opacity:.5; cursor:not-allowed; }
+  .kontrol-slot .bil-angka {
+    width:100%; font-family:inherit; font-size:30px; font-weight:900; text-align:center;
+    color:#12307a; background:#f7fbff; border:3px solid #b9cdf2; border-radius:12px;
+    padding:2px 6px; box-sizing:border-box; -moz-appearance:textfield;
+  }
+  .kontrol-slot .bil-angka::-webkit-outer-spin-button,
+  .kontrol-slot .bil-angka::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
+  .kontrol-slot .bil-angka:focus { outline:none; border-color:#e07b00; background:#fff7e6; }
+  .kontrol-slot .bil-item.kosong { opacity:.6; }
+  .kontrol-slot .bil-item.aktif { outline:4px solid #e07b00; background:#fff7e6; }
+  .kontrol-slot .bil-item.aktif .pilih-tanda { background:#e07b00; border-color:#8a5a12; color:#fff; }
+  .papan-kontrol .cara {
+    font-size:20px; font-weight:800; color:#8a5a12; text-align:left;
+    background:#fff3d6; border:3px dashed #ffb300; border-radius:14px; padding:8px 12px; margin:0;
+  }
+  .papan-bagian .aksi { margin-top:10px; justify-content:center; }
+  /* papan latihan dibuat sedikit lebih kecil supaya baris hasil ikut terlihat */
+  #papan-lanjut { max-width:560px; margin:0 auto; }
+  #papan-info-lanjut { font-size:27px; line-height:1.25; }
+  .papan-bagian .aksi .periksa, .papan-bagian .aksi .hapus-btn {
+    font-family:inherit; font-size:21px; font-weight:900; color:#fff; background:#1a56d6;
+    border:none; border-radius:999px; padding:9px 22px; cursor:pointer; box-shadow:0 4px 0 #0d2fa0;
+  }
+  .papan-bagian .aksi .hapus-btn { background:#94a3b8; box-shadow:0 4px 0 #64748b; }
+  .papan-bagian .aksi .periksa:active, .papan-bagian .aksi .hapus-btn:active { transform:translateY(2px); }
+  /* status penandaan di papan latihan */
+  .papan-grid b.on-c { background:#22c55e; border-color:#15803d; color:#fff; }
+  .papan-grid b.benar   { background:#22c55e; border-color:#15803d; color:#fff; }
+  .papan-grid b.salah   { background:#e11d48; border-color:#9f1239; color:#fff; }
+  .papan-grid b.terlewat { background:#fef3c7; border-color:#e07b00; color:#8a5a12; }
+  /* 2 penanda menumpuk pada angka yang sama -> merah (kelipatan persekutuan) */
+  .papan-grid b.tumpuk  { background:#e11d48; border-color:#9f1239; color:#fff; }
+
+  /* ===== SLIDE 3: MATERI KPK ===== */
+  .materi-teks .sorot {
+    font-size:26px; font-weight:900; color:#8a5a12; text-align:center;
+    background:#fff3d6; border:3px dashed #ffb300; border-radius:18px;
+    padding:12px; margin:0 0 12px;
+  }
+  .materi-teks .langkah { display:flex; gap:14px; align-items:flex-start; margin:0 0 14px; }
+  .materi-teks .langkah i {
+    flex:none; width:40px; height:40px; border-radius:50%;
+    background:#1a56d6; color:#fff; font-style:normal; font-weight:900; font-size:22px;
+    display:flex; align-items:center; justify-content:center; box-shadow:0 4px 0 #0d2fa0;
+  }
+  .materi-teks .langkah .isi { flex:1; }
+  .materi-teks .langkah p { margin:0 0 8px; }
+  .materi-teks .langkah p:last-child { margin:0; }
+  /* sel KPK = kelipatan persekutuan terkecil, selalu menang atas on-k */
+  .papan-grid b { position:relative; }
+  .papan-grid b.on-kpk {
+    background:#facc15; border-color:#a16207; color:#7c2d12;
+    transform:scale(1.14); box-shadow:0 0 0 5px rgba(250,204,21,.5);
+  }
+  .papan-grid b.on-kpk::after {
+    content:"\2B50"; position:absolute; top:-10px; right:-6px; font-size:22px; line-height:1;
+  }
+  .papan-legend i.lg-kpk { background:#facc15; }
+
+  /* ===== TOMBOL MATERI (style disimpan, tombolnya dihapus dari menu) ===== */
+  .materi-wrap {
+    position:absolute; left:50%; transform:translateX(-50%);
+    bottom:300px;
+    display:flex; gap:80px; z-index:5;
+  }
+  .materi-btn {
+    width:340px; cursor:pointer;
+    border:none; background:none; padding:0; overflow:visible;
+    filter:drop-shadow(0 14px 20px rgba(0,30,120,.45));
+    transition:transform .18s ease, filter .18s ease;
+    animation:materiIn .8s cubic-bezier(.2,1.4,.3,1) both;
+  }
+  #btn-fpb { animation-delay:.15s; }
+  .materi-btn img { width:100%; display:block; pointer-events:none; transition:transform .12s ease; }
+  .materi-btn:hover { transform:scale(1.06); filter:drop-shadow(0 18px 28px rgba(0,30,120,.55)) brightness(1.05); }
+  .materi-btn:active { transform:scale(.94); }
+  .materi-btn:active img { transform:scale(.9); filter:brightness(.9); }
+  .materi-btn.pressed img { animation:squash .42s cubic-bezier(.2,1.6,.3,1); }
+  .materi-btn .press-ring { border-radius:36px; }
+  @keyframes materiIn {
+    from { opacity:0; transform:translateY(90px) scale(.7); }
+    to { opacity:1; transform:translateY(0) scale(1); }
+  }
+
+  /* ===== PENGENALAN & TUJUAN (Background 1) ===== */
+  .board-wrap {
+    position:absolute; right:60px; top:50%;
+    transform:translateY(-57%);
+    width:1340px; z-index:5;
+  }
+  /* karakter Raya + balon arahan di layar Tujuan */
+  .raya-tujuan { position:absolute; left:180px; bottom:105px; height:660px; z-index:4; pointer-events:none; }
+  .raya-tujuan img { height:100%; width:auto; display:block;
+    filter:drop-shadow(0 20px 26px rgba(0,20,90,.35));
+    animation:rayaIdle 2.6s ease-in-out infinite; }
+  .tujuan-bubble {
+    position:absolute; left:310px; top:64px; width:720px;
+    background:#fff; border:9px solid #ffb300; border-radius:44px;
+    padding:28px 46px 34px;
+    box-shadow:0 22px 44px rgba(0,20,90,.3);
+    z-index:6; pointer-events:none; opacity:0;
+  }
+  .screen.active .tujuan-bubble { animation:bubbleIn .55s cubic-bezier(.2,1.4,.3,1) .15s forwards; }
+  .tujuan-bubble .nama { display:block; font-size:21px; color:#e08a00; font-weight:900; letter-spacing:3px; margin-bottom:6px; }
+  .tujuan-bubble p { margin:0; font-size:34px; line-height:1.45; font-weight:800; color:#12307a; }
+  .tujuan-bubble::before {
+    content:""; position:absolute; left:26px; bottom:-40px; width:0; height:0;
+    border-left:26px solid transparent; border-right:26px solid transparent; border-top:40px solid #ffb300;
+  }
+  .tujuan-bubble::after {
+    content:""; position:absolute; left:34px; bottom:-27px; width:0; height:0;
+    border-left:18px solid transparent; border-right:18px solid transparent; border-top:29px solid #fff;
+  }
+  /* ===== RAYA + BALON DI MENU PEMBELAJARAN ===== */
+  .raya-menu { position:absolute; left:58px; top:288px; height:562px; z-index:5; cursor:pointer; }
+  .raya-menu img { height:100%; width:auto; display:block;
+    filter:drop-shadow(0 20px 26px rgba(0,20,90,.35));
+    animation:rayaIdle 2.6s ease-in-out infinite; }
+  .raya-menu:hover img { filter:drop-shadow(0 20px 30px rgba(0,20,90,.45)) brightness(1.06); }
+  .raya-menu img.pop { animation:rayaPop .45s cubic-bezier(.2,1.6,.3,1), rayaIdle 2.6s ease-in-out .45s infinite; }
+  .menu-bubble {
+    position:absolute; left:268px; top:282px; width:640px;
+    background:#fff; border:9px solid #ffb300; border-radius:0 0 40px 40px;
+    padding:18px 36px 24px;
+    box-shadow:0 22px 44px rgba(0,20,90,.3);
+    z-index:6; pointer-events:none; opacity:0;
+  }
+  .screen.active .menu-bubble { animation:bubbleIn .55s cubic-bezier(.2,1.4,.3,1) .15s forwards; }
+  .menu-bubble .nama { display:block; font-size:21px; color:#e08a00; font-weight:900; letter-spacing:3px; margin-bottom:4px; }
+  .menu-bubble p { margin:0; font-size:31px; line-height:1.32; font-weight:800; color:#12307a; }
+  .menu-bubble::before {
+    content:""; position:absolute; left:-42px; top:104px; width:0; height:0;
+    border-top:27px solid transparent; border-bottom:27px solid transparent; border-right:42px solid #ffb300;
+  }
+  .menu-bubble::after {
+    content:""; position:absolute; left:-30px; top:113px; width:0; height:0;
+    border-top:18px solid transparent; border-bottom:18px solid transparent; border-right:30px solid #fff;
+  }
+  @keyframes bubbleOut {
+    from { opacity:1; transform:translateX(0) scale(1); }
+    to { opacity:0; transform:translateX(-40px) scale(.94); }
+  }
+  #screen-menu .menu-bubble.show { animation:bubbleIn .55s cubic-bezier(.2,1.4,.3,1) forwards; }
+  #screen-menu .menu-bubble.hide { animation:bubbleOut .38s ease forwards; }
+  .board-wrap > img { width:100%; display:block; pointer-events:none; filter:drop-shadow(0 18px 26px rgba(0,20,90,.35)); }
+  .board-text {
+    position:absolute;
+    left:72px; right:72px; top:190px; bottom:56px;
+    padding:4px 20px 4px 10px;
+    color:#12307a; text-align:left;
+    overflow-y:auto; overflow-x:hidden;
+    scrollbar-width:thin;
+    scrollbar-color:#1a56d6 #dbe6ff;
+  }
+  /* teks hanya bisa diklik/di-scroll saat layarnya aktif (agar tidak memblokir tombol layar lain) */
+  .screen.active .board-text { pointer-events:auto; }
+  .board-text::-webkit-scrollbar { width:14px; }
+  .board-text::-webkit-scrollbar-track { background:#dbe6ff; border-radius:999px; }
+  .board-text::-webkit-scrollbar-thumb { background:linear-gradient(180deg,#2f7bff,#0d2fa0); border-radius:999px; border:3px solid #dbe6ff; }
+  .board-text h3 { font-size:31px; line-height:1.15; font-weight:900; color:#0d2a8a; margin:0 0 6px; }
+  .board-text h3 + p { margin-bottom:16px; }
+  .board-text p { font-size:24px; line-height:1.32; font-weight:600; color:#1c3a86; margin-bottom:10px; text-align:left; }
+  .board-text p.poin { font-size:26px; line-height:1.28; font-weight:800; color:#0d2a8a; margin-bottom:6px; }
+  .page-icon { position:absolute; left:50%; transform:translateX(-50%); top:78px; width:480px; z-index:6; pointer-events:none;
+    filter:drop-shadow(0 10px 14px rgba(0,0,0,.3)); }
+  /* tombol navigasi bawah */
+  .nav-next, .nav-prev {
+    position:absolute; bottom:56px; z-index:6;
+    width:150px; height:150px; border:none; background:none; cursor:pointer; padding:0; overflow:visible;
+    transition:transform .18s ease;
+  }
+  .nav-next { right:64px; }
+  .nav-prev { left:64px; }
+  .nav-next img, .nav-prev img { width:100%; height:100%; display:block; pointer-events:none; border-radius:50%;
+    filter:drop-shadow(0 10px 14px rgba(0,0,0,.35)); transition:transform .12s ease; }
+  .nav-next:hover, .nav-prev:hover { transform:scale(1.08); }
+  .nav-next:active, .nav-prev:active { transform:scale(.9); }
+  .nav-next.pressed img, .nav-prev.pressed img { animation:squash .42s cubic-bezier(.2,1.6,.3,1); }
+  /* Tombol Mulai Belajar: DI DALAM balon percakapan, muncul setelah kalimat terakhir selesai */
+  #btn-mulai-belajar {
+    display:none;
+    position:relative;
+    margin:28px auto 0;
+    width:320px; cursor:pointer; border:none; background:none; padding:0; overflow:visible;
+    filter:drop-shadow(0 12px 18px rgba(0,30,120,.40));
+    transition:transform .18s ease, filter .18s ease;
+  }
+  #btn-mulai-belajar.show { display:block; animation:ctaIn .55s cubic-bezier(.2,1.5,.3,1); }
+  @keyframes ctaIn {
+    from { opacity:0; transform:translateY(28px) scale(.82); }
+    to   { opacity:1; transform:translateY(0) scale(1); }
+  }
+  #btn-mulai-belajar img { width:100%; display:block; pointer-events:none; transition:transform .12s ease; }
+  #btn-mulai-belajar:hover { transform:scale(1.05); filter:brightness(1.06) drop-shadow(0 12px 18px rgba(0,30,120,.40)); }
+  #btn-mulai-belajar:active { transform:scale(.94); }
+  #btn-mulai-belajar.pressed img { animation:squash .42s cubic-bezier(.2,1.6,.3,1); }
+  #btn-mulai-belajar .press-ring { border-radius:40px; }
+  /* saat tombol muncul: petunjuk "klik untuk lanjut" & titik progres disembunyikan */
+  .bubble.done .ket { display:none; }
+  #intro-dots { transition:opacity .45s ease; }
+  #intro-dots.done { opacity:0; }
+
+  /* ===== PEMBUKA: KARAKTER RAYA + BALON TALK BUBBLE ===== */
+  .raya-stage { position:absolute; left:170px; bottom:96px; height:740px; z-index:5; }
+  .raya-stage img {
+    height:100%; width:auto; display:block; pointer-events:none;
+    filter:drop-shadow(0 20px 26px rgba(0,20,90,.35));
+    animation:rayaIdle 2.6s ease-in-out infinite;
+  }
+  .raya-stage img.pop { animation:rayaPop .55s cubic-bezier(.2,1.6,.3,1); }
+  @keyframes rayaIdle {
+    0%,100% { transform:translateY(0) rotate(0deg); }
+    50% { transform:translateY(-14px) rotate(-1.2deg); }
+  }
+  @keyframes rayaPop {
+    0% { transform:scale(.7) rotate(-7deg); opacity:0; }
+    60% { transform:scale(1.09) rotate(2.5deg); opacity:1; }
+    100% { transform:scale(1) rotate(0); }
+  }
+  .bubble {
+    position:absolute; right:104px; top:206px; width:960px; min-height:262px;
+    background:#fff; border:9px solid #ffb300; border-radius:52px;
+    padding:40px 58px 56px;
+    box-shadow:0 22px 44px rgba(0,20,90,.3);
+    z-index:5; cursor:pointer; overflow:visible;
+    animation:bubbleIn .5s cubic-bezier(.2,1.4,.3,1);
+  }
+  .bubble.in { animation:bubbleIn .5s cubic-bezier(.2,1.4,.3,1); }
+  .bubble::before {
+    content:""; position:absolute; left:-53px; top:104px; width:0; height:0;
+    border-top:37px solid transparent; border-bottom:37px solid transparent; border-right:53px solid #ffb300;
+  }
+  .bubble::after {
+    content:""; position:absolute; left:-44px; top:111px; width:0; height:0;
+    border-top:30px solid transparent; border-bottom:30px solid transparent; border-right:44px solid #fff;
+  }
+  @keyframes bubbleIn {
+    from { opacity:0; transform:translateX(40px) scale(.9); }
+    to { opacity:1; transform:translateX(0) scale(1); }
+  }
+  .bubble .nama {
+    display:block; font-size:23px; color:#e08a00; font-weight:900;
+    letter-spacing:3px; margin-bottom:8px;
+  }
+  .bubble p { margin:0; font-size:37px; line-height:1.5; font-weight:800; color:#12307a; min-height:1.5em; text-align:left; }
+  .bubble .ket {
+    position:absolute; right:32px; bottom:14px;
+    font-size:19px; color:#8a9ac4; font-weight:700;
+    display:flex; align-items:center; gap:10px;
+  }
+  .bubble .ket-arrow {
+    width:0; height:0;
+    border-top:8px solid transparent; border-bottom:8px solid transparent;
+    border-left:13px solid #ffb000;
+    animation:ketNudge 1.3s ease-in-out infinite;
+  }
+  @keyframes ketNudge {
+    0%,100% { transform:translateX(0); opacity:.6; }
+    50% { transform:translateX(6px); opacity:1; }
+  }
+  .dots {
+    position:absolute; right:104px; top:600px; width:960px;
+    display:flex; gap:16px; justify-content:center; z-index:5;
+  }
+  .dots i {
+    width:22px; height:22px; border-radius:50%;
+    background:#fff; border:5px solid #1a56d6; opacity:.42; transition:.3s;
+  }
+  .dots i.on { opacity:1; background:#ffb000; transform:scale(1.3); }
+</style>
+</head>
+<body>
+<div id="viewport">
+  <div id="stage" aria-label="KELFA QUEST 1920x1080">
+    <!-- ===== LAYAR 1: HOME ===== -->
+    <div id="screen-home" class="screen active">
+      <img id="bg-cover" class="bg-full" src="Asset/Cover%20home.png" alt="Cover Home KELFA QUEST Matematika Kelas V SD" draggable="false" />
+      <div id="audio-hint">🔊 Klik di mana saja untuk mengaktifkan suara</div>
+      <!-- Tombol utama -->
+      <button id="btn-mulai" aria-label="Mulai">
+        <img src="Asset/Tombol%20mulai.png" alt="Tombol Mulai" draggable="false" />
+      </button>
+      <!-- Tombol pengaturan (home, kanan atas) -->
+      <button id="btn-setting" aria-label="Pengaturan">
+        <img src="Asset/Tombol%20pengaturan.png" alt="Pengaturan" draggable="false" />
+      </button>
+      <!-- Tombol informasi pengembang (home, kiri atas) -->
+      <button id="btn-info" aria-label="Informasi Pengembang">
+        <img src="Asset/Ikon%20Informasi%20Pengembang.png" alt="Informasi Pengembang" draggable="false" />
+      </button>
+      <!-- Logo instansi (home, kanan atas) -->
+      <img id="logo-instansi" src="Asset/Logo%20instansi.png" alt="Logo Instansi" draggable="false" />
+      <!-- badge kiri bawah dihapus sesuai permintaan -->
+    </div>
+
+    <!-- ===== LAYAR 2: PENGENALAN AWAL (Background 1) ===== -->
+    <div id="screen-intro" class="screen" aria-label="Pengenalan">
+      <img class="bg-full" src="Asset/Background%201.png" alt="Background" draggable="false" />
+      <div class="nav-topleft">
+        <button id="btn-home-intro" class="nav-btn" aria-label="Kembali ke Home">
+          <img src="Asset/Home.png" alt="Home" draggable="false" />
+        </button>
+        <button id="btn-setting-intro" class="nav-btn" aria-label="Pengaturan">
+          <img src="Asset/Tombol%20pengaturan.png" alt="Pengaturan" draggable="false" />
+        </button>
+      </div>
+      <!-- Karakter Raya (ekspresi ikut berubah mengikuti dialog) -->
+      <div class="raya-stage">
+        <img id="raya-img" src="Asset/Animasi%20anak/transparan/Menyapa.png" alt="Raya" draggable="false" />
+      </div>
+
+      <!-- Balon percakapan -->
+      <div id="bubble" class="bubble">
+        <span class="nama">RAYA</span>
+        <p id="bubble-text"></p>
+        <!-- Tombol Mulai Belajar di dalam balon (muncul setelah kalimat terakhir) -->
+        <button id="btn-mulai-belajar" aria-label="Mulai Belajar">
+          <img src="Asset/Tombol%20Mulai%20Belajar.png" alt="Mulai Belajar" draggable="false" />
+        </button>
+        <span class="ket">klik untuk lanjut<span class="ket-arrow"></span></span>
+      </div>
+      <div id="intro-dots" class="dots"></div>
+    </div>
+
+    <!-- ===== LAYAR 3: TUJUAN PEMBELAJARAN (Background 1) ===== -->
+    <div id="screen-tujuan" class="screen" aria-label="Tujuan Pembelajaran">
+      <img class="bg-full" src="Asset/Background%201.png" alt="Background" draggable="false" />
+      <div class="nav-topleft">
+        <button id="btn-home-tujuan" class="nav-btn" aria-label="Kembali ke Home">
+          <img src="Asset/Home.png" alt="Home" draggable="false" />
+        </button>
+        <button id="btn-setting-tujuan" class="nav-btn" aria-label="Pengaturan">
+          <img src="Asset/Tombol%20pengaturan.png" alt="Pengaturan" draggable="false" />
+        </button>
+      </div>
+      <div class="board-wrap">
+        <img src="Asset/Papan%20Tulis%20.png" alt="Papan Tulis" draggable="false" />
+        <div class="board-text" id="tujuan-text">
+          <h3>Capaian Pembelajaran</h3>
+          <p>Menyelesaikan masalah yang berkaitan dengan KPK.</p>
+          <h3>Tujuan Pembelajaran</h3>
+          <p class="poin">1. Kognitif (C4 – Menganalisis)</p>
+          <p>Melalui penggunaan media interaktif digital, murid mampu menganalisis masalah yang berkaitan dengan KPK dengan benar.</p>
+          <p class="poin">2. Afektif – Profil Lulusan: Keimanan dan Ketakwaan terhadap YME, Penalaran Kritis, dan Kemandirian</p>
+          <p>Melalui penggunaan media interaktif digital, murid mampu menunjukkan bersyukur, berpikir kritis, dan mandiri dalam menyelesaikan masalah KPK dengan baik.</p>
+          <p class="poin">3. Psikomotor</p>
+          <p>Melalui penggunaan media interaktif digital, murid mampu mempraktikkan langkah penyelesaian masalah KPK dengan tepat.</p>
+        </div>
+      </div>
+      <!-- Karakter Raya (ekspresi Tau) + balon arahan -->
+      <div class="raya-tujuan">
+        <img src="Asset/Animasi%20anak/transparan/Tau.png" alt="Raya" draggable="false" />
+      </div>
+      <div class="tujuan-bubble">
+        <span class="nama">RAYA</span>
+        <p id="tujuan-bubble-text">Sebelum kita mulai, yuk pahami tujuan pembelajaran di samping!</p>
+      </div>
+      <button id="btn-prev-tujuan" class="nav-prev" aria-label="Sebelumnya">
+        <img src="Asset/Sebelumnya.png" alt="Sebelumnya" draggable="false" />
+      </button>
+      <button id="btn-next-tujuan" class="nav-next" aria-label="Selanjutnya">
+        <img src="Asset/Selanjutnya.png" alt="Selanjutnya" draggable="false" />
+      </button>
+    </div>
+
+    <!-- ===== LAYAR 2: TAMPILAN BARU (background cover menu) ===== -->
+    <div id="screen-kosong" class="screen" aria-label="Materi">
+      <img class="bg-full" src="Asset/cover%20menu.png" alt="Materi" draggable="false" />
+      <div class="nav-topleft">
+        <button id="btn-home-kosong" class="nav-btn" aria-label="Kembali ke Home">
+          <img src="Asset/Home.png" alt="Home" draggable="false" />
+        </button>
+        <button id="btn-setting-kosong" class="nav-btn" aria-label="Pengaturan">
+          <img src="Asset/Tombol%20pengaturan.png" alt="Pengaturan" draggable="false" />
+        </button>
+      </div>
+      <div class="materi-panel satu">
+        <!-- PANEL LAMPU: tidak ikut scroll, selalu terlihat saat menjawab soal -->
+        <div class="materi-teks materi-lampu">
+          <h2>&#127919; Pertanyaan Pemantik</h2>
+          <div class="pemicu">
+            <span class="ikon">&#128161;</span>
+            <span class="tanya">&ldquo;Kapan Keduanya Menyala Bersamaan?&rdquo;</span>
+          </div>
+
+          <p>Bayangkan ada <b>dua lampu</b> yang menyala secara teratur.</p>
+          <div class="lampu-kartu">
+            <div class="lampu-a">
+              <span class="lampu" id="lampu-a"><span class="kaca"></span><span class="dok"></span></span>
+              <b>Lampu A menyala setiap <span style="color:#1a56d6">3 detik</span>.</b>
+            </div>
+            <div class="lampu-b">
+              <span class="lampu" id="lampu-b"><span class="kaca"></span><span class="dok"></span></span>
+              <b>Lampu B menyala setiap <span style="color:#b45309">6 detik</span>.</b>
+            </div>
+          </div>
+
+          <div class="lampu-panel">
+            <span class="satuan">detik ke-</span>
+            <span class="angka" id="timer-angka">0</span>
+            <button type="button" class="tombol-lampu" id="btn-mulai-lampu">Mulai</button>
+            <button type="button" class="tombol-lampu ulang" id="btn-ulang-lampu" disabled>Ulangi</button>
+          </div>
+          <p>Pada <b>detik ke-0</b>, kedua lampu masih dalam keadaan <b>mati</b>.</p>
+
+          <p class="ingat">&#11088; Lampu dan timer di sebelah kiri ini selalu terlihat, jadi kamu bisa menjawab sambil memperhatikan nyala lampunya.</p>
+        </div>
+
+        <!-- PANEL SOAL: boleh di-scroll -->
+        <div class="materi-teks materi-soal">
+          <p class="sorot">&#9998; Jawab Pertanyaan Berikut</p>
+          <p class="petunjuk">Klik angka yang menurutmu benar, lalu tekan <b>Periksa</b>. Boleh memilih lebih dari satu angka.</p>
+          <div id="daftar-tanya">
+            <div class="tanya-jawab">
+              <p class="tanya"><span class="no">1</span><span>Setiap detik ke berapa saja lampu A menyala?</span><span class="jml">0 dipilih</span></p>
+              <div class="isi"></div>
+            </div>
+            <div class="tanya-jawab">
+              <p class="tanya"><span class="no">2</span><span>Setiap detik ke berapa lampu B menyala?</span><span class="jml">0 dipilih</span></p>
+              <div class="isi"></div>
+            </div>
+            <div class="tanya-jawab">
+              <p class="tanya"><span class="no">3</span><span>Setiap detik ke berapa saja lampu A dan B menyala bersama?</span><span class="jml">0 dipilih</span></p>
+              <div class="isi"></div>
+            </div>
+            <div class="tanya-jawab">
+              <p class="tanya"><span class="no">4</span><span>Pada detik ke berapa lampu A dan B menyala bersama untuk pertama kalinya?</span><span class="jml">0 dipilih</span></p>
+              <div class="isi"></div>
+            </div>
+          </div>
+
+          <div class="jembatan">
+            <p>Untuk menemukan kapan dua kejadian yang berulang akan terjadi bersamaan, kita perlu memahami <b>kelipatan</b> dan <b>KPK</b>.</p>
+          </div>
+
+          <p class="mulai">&#10145; Yuk, kita mulai dari mengenal kelipatan!</p>
+        </div>
+      </div>
+      <button id="btn-prev-kosong" class="nav-prev" aria-label="Sebelumnya">
+        <img src="Asset/Sebelumnya.png" alt="Sebelumnya" draggable="false" />
+      </button>
+      <button id="btn-next-kosong" class="nav-next" aria-label="Selanjutnya">
+        <img src="Asset/Selanjutnya.png" alt="Selanjutnya" draggable="false" />
+      </button>
+    </div>
+
+    <!-- ===== LAYAR 3: MENU MATERI (cover dulu) ===== -->
+    <div id="screen-menu" class="screen" aria-label="Menu Materi">
+      <img id="bg-menu" class="bg-full" src="Asset/cover%20menu.png" alt="Menu Materi" draggable="false" />
+      <!-- Tombol Home + Pengaturan di sudut kiri atas -->
+      <div class="nav-topleft">
+        <button id="btn-home-menu" class="nav-btn" aria-label="Kembali ke Home">
+          <img src="Asset/Home.png" alt="Home" draggable="false" />
+        </button>
+        <button id="btn-setting-menu" class="nav-btn" aria-label="Pengaturan">
+          <img src="Asset/Tombol%20pengaturan.png" alt="Pengaturan" draggable="false" />
+        </button>
+      </div>
+      <!-- ===== SLIDE 1: MATERI KELIPATAN ===== -->
+      <div class="materi-panel">
+        <div class="materi-teks">
+          <h2>Apa Itu Kelipatan?</h2>
+          <p>Kelipatan suatu bilangan adalah hasil perkalian bilangan tersebut dengan bilangan cacah 1, 2, 3, 4, dan seterusnya.</p>
+          <h3>Contoh: Kelipatan 3</h3>
+          <div class="chip-list">
+            <span class="chip">3 &times; 1 = 3</span>
+            <span class="chip">3 &times; 2 = 6</span>
+            <span class="chip">3 &times; 3 = 9</span>
+            <span class="chip">3 &times; 4 = 12</span>
+            <span class="chip">3 &times; 5 = 15</span>
+          </div>
+          <p>Jadi, <b>3, 6, 9, 12, 15, ...</b> merupakan kelipatan dari 3.</p>
+          <h3>Bagaimana Menentukan Kelipatan?</h3>
+          <p>Kelipatan dapat ditentukan dengan mengalikan suatu bilangan dengan 1, 2, 3, 4, dan seterusnya. Misalnya ingin menentukan kelipatan 3:</p>
+          <div class="chip-list">
+            <span class="chip">3 &times; 1 = 3</span>
+            <span class="chip">3 &times; 2 = 6</span>
+            <span class="chip">3 &times; 3 = 9</span>
+            <span class="chip">3 &times; 4 = 12</span>
+            <span class="chip">3 &times; 5 = 15</span>
+          </div>
+          <p>Selain menggunakan perkalian, kelipatan juga dapat ditemukan dengan menambahkan bilangan yang sama secara berulang.</p>
+          <p>Untuk kelipatan 3:</p>
+          <p class="rantai">3 &rarr; 6 &rarr; 9 &rarr; 12 &rarr; 15 &rarr; 18</p>
+          <p>Perhatikan lompatan pada setiap angka:</p>
+          <p class="rantai">3 &rarr; <span class="tambah">+3</span> &rarr; 6 &rarr; <span class="tambah">+3</span> &rarr; 9 &rarr; <span class="tambah">+3</span> &rarr; 12 &rarr; <span class="tambah">+3</span> &rarr; 15</p>
+          <p>Artinya, setiap kali berpindah ke kelipatan berikutnya, kita menambahkan 3.</p>
+          <h3>Coba pada Papan Angka</h3>
+          <p>Sekarang gunakan papan angka 1&ndash;100 untuk melihat pola kelipatan secara langsung. Pilih sebuah bilangan, kemudian perhatikan angka-angka yang menjadi kelipatannya.</p>
+        </div>
+        <div class="papan-bagian">
+          <h3>Papan Angka 1&ndash;100</h3>
+          <div class="papan-grid" id="papan-grid"></div>
+          <div class="papan-info" id="papan-info">Klik salah satu angka untuk melihat kelipatannya.</div>
+        </div>
+      </div>
+      <!-- Tombol materi dihapus sesuai permintaan -->
+      <button id="btn-prev-menu" class="nav-prev" aria-label="Sebelumnya">
+        <img src="Asset/Sebelumnya.png" alt="Sebelumnya" draggable="false" />
+      </button>
+      <button id="btn-next-menu" class="nav-next" aria-label="Selanjutnya">
+        <img src="Asset/Selanjutnya.png" alt="Selanjutnya" draggable="false" />
+      </button>
+    </div>
+
+    <!-- ===== LAYAR 3: MATERI KELIPATAN PERSEKUTUAN ===== -->
+    <div id="screen-next" class="screen" aria-label="Materi Kelipatan Persekutuan">
+      <img class="bg-full" src="Asset/cover%20menu.png" alt="Materi Kelipatan Persekutuan" draggable="false" />
+      <div class="nav-topleft">
+        <button id="btn-home-next" class="nav-btn" aria-label="Kembali ke Home">
+          <img src="Asset/Home.png" alt="Home" draggable="false" />
+        </button>
+        <button id="btn-setting-next" class="nav-btn" aria-label="Pengaturan">
+          <img src="Asset/Tombol%20pengaturan.png" alt="Pengaturan" draggable="false" />
+        </button>
+      </div>
+      <div class="materi-panel">
+        <div class="materi-teks">
+          <h2>Mengenal Kelipatan Persekutuan</h2>
+
+          <h3>Apa Itu Kelipatan Persekutuan?</h3>
+          <p>Kelipatan persekutuan adalah kelipatan yang sama dari dua bilangan atau lebih.</p>
+          <p>Untuk menemukannya, kita perlu mencari kelipatan dari masing-masing bilangan terlebih dahulu.</p>
+
+          <h3>Contoh</h3>
+          <p>Kita akan mencari kelipatan dari <b>3</b> dan <b>4</b>.</p>
+          <p><b>Kelipatan 3:</b></p>
+          <p class="rantai">3 &rarr; 6 &rarr; 9 &rarr; 12 &rarr; 15 &rarr; 18 &rarr; 21 &rarr; 24 &rarr; ...</p>
+          <p><b>Kelipatan 4:</b></p>
+          <p class="rantai">4 &rarr; 8 &rarr; 12 &rarr; 16 &rarr; 20 &rarr; 24 &rarr; ...</p>
+          <p>Perhatikan angka yang terdapat pada kedua kelompok kelipatan.</p>
+          <p><b>12</b> dan <b>24</b> terdapat pada kelipatan 3 <b>dan juga</b> kelipatan 4.</p>
+          <p>Jadi, <b>12 dan 24 merupakan kelipatan persekutuan dari 3 dan 4.</b></p>
+
+          <h3>Menemukan Kelipatan Persekutuan pada Papan Angka</h3>
+          <p>Gunakan papan angka 1&ndash;100. Pilih <b>dua bilangan</b>, misalnya bilangan pertama <b>3</b> dan bilangan kedua <b>4</b>. Kemudian kedua kelipatannya akan ditampilkan pada papan angka.</p>
+          <p>Angka yang ditandai pada <b>kedua</b> kelipatan merupakan kelipatan persekutuan.</p>
+          <p class="rantai remind"><b>Ingat!</b> Untuk menemukan kelipatan persekutuan, cari angka yang sama pada kelipatan dua bilangan atau lebih.</p>
+        </div>
+        <div class="papan-bagian">
+          <h3>Papan Angka 1&ndash;100</h3>
+          <div class="papan-legend">
+            <span><i class="lg-a"></i>Kelipatan bilangan 1</span>
+            <span><i class="lg-b"></i>Kelipatan bilangan 2</span>
+            <span><i class="lg-k"></i>Kelipatan persekutuan</span>
+          </div>
+          <div class="papan-grid" id="papan-k"></div>
+          <div class="papan-info" id="papan-info-k">Klik bilangan pertama pada papan angka.</div>
+        </div>
+      </div>
+      <button id="btn-prev-next" class="nav-prev" aria-label="Sebelumnya">
+        <img src="Asset/Sebelumnya.png" alt="Sebelumnya" draggable="false" />
+      </button>
+      <button id="btn-next-next" class="nav-next" aria-label="Selanjutnya">
+        <img src="Asset/Selanjutnya.png" alt="Selanjutnya" draggable="false" />
+      </button>
+    </div>
+
+    <!-- ===== LAYAR 4: MATERI KELIPATAN PERSEKUTUAN TERKECIL (KPK) ===== -->
+    <div id="screen-kpk" class="screen" aria-label="Materi KPK">
+      <img class="bg-full" src="Asset/cover%20menu.png" alt="Materi KPK" draggable="false" />
+      <div class="nav-topleft">
+        <button id="btn-home-kpk" class="nav-btn" aria-label="Kembali ke Home">
+          <img src="Asset/Home.png" alt="Home" draggable="false" />
+        </button>
+        <button id="btn-setting-kpk" class="nav-btn" aria-label="Pengaturan">
+          <img src="Asset/Tombol%20pengaturan.png" alt="Pengaturan" draggable="false" />
+        </button>
+      </div>
+      <div class="materi-panel">
+        <div class="materi-teks">
+          <h2>Mengenal Kelipatan Persekutuan Terkecil (KPK)</h2>
+
+          <h3>Apa Itu KPK?</h3>
+          <p>Kelipatan Persekutuan Terkecil (KPK) adalah kelipatan persekutuan yang nilainya paling kecil dari dua bilangan atau lebih.</p>
+          <p>Kita sudah mengetahui bahwa 3 dan 4 memiliki beberapa kelipatan persekutuan, yaitu:</p>
+          <p class="rantai">12, 24, 36, 48, ...</p>
+          <p>Sekarang, perhatikan angka-angka tersebut. Manakah yang paling kecil?</p>
+          <p class="sorot">&rarr; 12</p>
+          <p>Jadi, KPK dari 3 dan 4 adalah <b>12</b>.</p>
+
+          <h3>Bagaimana Menentukan KPK?</h3>
+          <p>Untuk menentukan KPK dengan cara mencari kelipatan, lakukan langkah berikut:</p>
+          <div class="langkah">
+            <i>1</i>
+            <div class="isi">
+              <p>Tentukan kelipatan dari masing-masing bilangan.</p>
+              <p class="rantai">Kelipatan 3: 3, 6, 9, 12, 15, 18, ...</p>
+              <p class="rantai">Kelipatan 4: 4, 8, 12, 16, 20, ...</p>
+            </div>
+          </div>
+          <div class="langkah">
+            <i>2</i>
+            <div class="isi">
+              <p>Cari angka yang sama.</p>
+              <p>12 merupakan angka yang terdapat pada kedua kelompok.</p>
+            </div>
+          </div>
+          <div class="langkah">
+            <i>3</i>
+            <div class="isi">
+              <p>Jika terdapat lebih dari satu kelipatan persekutuan, pilih yang paling kecil.</p>
+              <p class="rantai">12 &lt; 24 &lt; 36 &lt; ...</p>
+            </div>
+          </div>
+          <p class="sorot">KPK (3, 4) = 12</p>
+
+          <h3>Menemukan KPK dengan Papan Angka 1&ndash;100</h3>
+          <p>Sekarang gunakan papan angka untuk membuktikan KPK.</p>
+          <p><b>Bilangan 1: 3</b><br /><b>Bilangan 2: 4</b></p>
+          <p>Tampilkan kelipatan masing-masing pada papan angka. Kemudian angka yang menjadi kelipatan persekutuan ditandai.</p>
+          <p class="rantai">12 &nbsp;&#9733;&nbsp; 24 &nbsp;&#9733;&nbsp; 36 &nbsp;&#9733;&nbsp; 48 &nbsp;&#9733;&nbsp; ...</p>
+          <p>Kemudian pilih angka persekutuan yang paling kecil.</p>
+          <p class="sorot">KPK = 12</p>
+          <p>Jadi, KPK dapat ditemukan dengan mencari kelipatan yang sama dari dua bilangan atau lebih, kemudian memilih kelipatan persekutuan yang paling kecil.</p>
+          <p class="rantai remind"><b>Ingat!</b> Kelipatan &rarr; Kelipatan Persekutuan &rarr; yang paling kecil = KPK</p>
+        </div>
+        <div class="papan-bagian">
+          <h3>Papan Angka 1&ndash;100</h3>
+          <div class="papan-legend">
+            <span><i class="lg-a"></i>Kelipatan bilangan 1</span>
+            <span><i class="lg-b"></i>Kelipatan bilangan 2</span>
+            <span><i class="lg-k"></i>Kelipatan persekutuan</span>
+            <span><i class="lg-kpk"></i>Yang paling kecil (KPK)</span>
+          </div>
+          <div class="papan-grid" id="papan-kpk"></div>
+          <div class="papan-info" id="papan-info-kpk">Klik bilangan pertama pada papan angka.</div>
+        </div>
+      </div>
+      <button id="btn-prev-kpk" class="nav-prev" aria-label="Sebelumnya">
+        <img src="Asset/Sebelumnya.png" alt="Sebelumnya" draggable="false" />
+      </button>
+      <button id="btn-next-kpk" class="nav-next" aria-label="Selanjutnya">
+        <img src="Asset/Selanjutnya.png" alt="Selanjutnya" draggable="false" />
+      </button>
+      </div>
+
+    <!-- ===== LAYAR: TANTANGAN ATUR JADWAL DIMAS ===== -->
+    <div id="screen-jadwal" class="screen" aria-label="Tantangan Atur Jadwal Dimas">
+      <img class="bg-full" src="Asset/cover%20menu.png" alt="Tantangan Atur Jadwal Dimas" draggable="false" />
+      <div class="nav-topleft">
+        <button id="btn-home-jadwal" class="nav-btn" aria-label="Kembali ke Home">
+          <img src="Asset/Home.png" alt="Home" draggable="false" />
+        </button>
+        <button id="btn-setting-jadwal" class="nav-btn" aria-label="Pengaturan">
+          <img src="Asset/Tombol%20pengaturan.png" alt="Pengaturan" draggable="false" />
+        </button>
+      </div>
+      <div class="materi-panel">
+        <div class="materi-teks">
+          <h2>🧩 Tantangan: Atur Jadwal Dimas</h2>
+          <p>Dimas memiliki dua kegiatan rutin:</p>
+          <ul class="kegiatan">
+            <li><b>📚 Belajar kelompok</b> → setiap <b>4 hari sekali</b></li>
+            <li><b>⚽ Latihan sepak bola</b> → setiap <b>6 hari sekali</b></li>
+          </ul>
+          <p>Pada <b>1 Oktober</b>, Dimas melakukan kedua kegiatan tersebut bersamaan.</p>
+          <p>Dimas ingin menambahkan <b>latihan musik setiap 8 hari sekali</b>. Ia ingin mengetahui apakah jadwal baru tersebut akan bertabrakan dengan kegiatan lainnya.</p>
+          <p>Bantulah Dimas menentukan jadwalnya!</p>
+
+          <h3>Pertanyaan</h3>
+          <p><b>1.</b> Kapan belajar kelompok dan latihan sepak bola akan dilakukan bersamaan lagi?</p>
+          <p><b>2.</b> Apakah latihan musik setiap 8 hari sekali akan bertabrakan dengan kedua kegiatan tersebut?</p>
+          <p><b>3.</b> Menurutmu, apakah jadwal latihan musik Dimas sudah tepat? Jelaskan alasanmu!</p>
+
+          <div class="petunjuk">
+            <b>💡 Petunjuk di media:</b> Gunakan kalender di bawah untuk menandai setiap jadwal kegiatan. Perhatikan tanggal yang muncul secara bersamaan. Dari tanggal tersebut, temukan pola pertemuan kegiatannya sendiri-sendiri.
+          </div>
+        </div>
+        <div class="papan-bagian">
+          <h3>Kalender Oktober 2026</h3>
+          <div class="kalender-wrap">
+            <div class="kalender-judul">Oktober 2026</div>
+            <div class="kalender-grid" id="kalender-jadwal"></div>
+          </div>
+          <div class="kalender-kontrol">
+            <button type="button" class="tanda-btn t-a on" data-jenis="a">📚 Belajar kelompok</button>
+            <button type="button" class="tanda-btn t-b" data-jenis="b">⚽ Sepak bola</button>
+            <button type="button" class="tanda-btn t-c" data-jenis="c">🎵 Musik</button>
+            <button type="button" class="tanda-btn t-reset" id="btn-hapus-jadwal">Hapus Tanda</button>
+          </div>
+          <div class="papan-info" id="info-kalender">Pilih kegiatan, lalu klik tanggalnya pada kalender.</div>
+        </div>
+      </div>
+      <button id="btn-prev-jadwal" class="nav-prev" aria-label="Sebelumnya">
+        <img src="Asset/Sebelumnya.png" alt="Sebelumnya" draggable="false" />
+      </button>
+      <button id="btn-next-jadwal" class="nav-next" aria-label="Selanjutnya">
+        <img src="Asset/Selanjutnya.png" alt="Selanjutnya" draggable="false" />
+      </button>
+    </div>
+
+    <!-- ===== LAYAR 5: LANJUTAN MATERI KPK (isi materi menyusul) ===== -->
+    <div id="screen-lanjut" class="screen" aria-label="Lanjutan Materi">
+      <img class="bg-full" src="Asset/cover%20menu.png" alt="Lanjutan Materi" draggable="false" />
+      <div class="nav-topleft">
+        <button id="btn-home-lanjut" class="nav-btn" aria-label="Kembali ke Home">
+          <img src="Asset/Home.png" alt="Home" draggable="false" />
+        </button>
+        <button id="btn-setting-lanjut" class="nav-btn" aria-label="Pengaturan">
+          <img src="Asset/Tombol%20pengaturan.png" alt="Pengaturan" draggable="false" />
+        </button>
+      </div>
+      <div class="materi-panel">
+        <div class="materi-teks">
+          <h2>Latihan Papan Angka</h2>
+          <p>Di sini kamu sendiri yang mengetik bilangan dan menandai kelipatannya di papan angka.</p>
+
+          <h3>Langkah</h3>
+          <p>1. Pilih dulu mau memakai <b>1, 2, atau 3 bilangan</b>.</p>
+          <p>2. <b>Ketik sendiri</b> bilangan pilihanmu pada kotak <b>A</b> (lalu B dan C) dari 1 sampai 100.</p>
+          <p>3. Klik penanda <b>A</b>, lalu klik angka-angka pada papan yang merupakan <b>kelipatan A</b>. Begitu juga untuk penanda <b>B</b> dan <b>C</b>.</p>
+          <p>4. Tekan <b>Periksa Jawaban</b> untuk melihat hasil penandaanmu.</p>
+
+          <div class="papan-kontrol">
+            <div class="kontrol-baris">
+              <span>Jumlah bilangan:</span>
+              <button type="button" class="jml-btn on" data-jml="1">1</button>
+              <button type="button" class="jml-btn" data-jml="2">2</button>
+              <button type="button" class="jml-btn" data-jml="3">3</button>
+            </div>
+            <div class="kontrol-slot">
+              <div class="bil-item s-a kosong" data-slot="0">
+                <div class="bil-atas"><i></i><b>A</b>
+                  <button type="button" class="pilih-tanda" data-tanda="0" disabled>Tandai</button>
+                </div>
+                <input type="number" class="bil-angka" data-bil="0" min="1" max="100" inputmode="numeric" placeholder="ketik" aria-label="Bilangan A" />
+              </div>
+              <div class="bil-item s-b kosong" data-slot="1">
+                <div class="bil-atas"><i></i><b>B</b>
+                  <button type="button" class="pilih-tanda" data-tanda="1" disabled>Tandai</button>
+                </div>
+                <input type="number" class="bil-angka" data-bil="1" min="1" max="100" inputmode="numeric" placeholder="ketik" aria-label="Bilangan B" />
+              </div>
+              <div class="bil-item s-c kosong" data-slot="2">
+                <div class="bil-atas"><i></i><b>C</b>
+                  <button type="button" class="pilih-tanda" data-tanda="2" disabled>Tandai</button>
+                </div>
+                <input type="number" class="bil-angka" data-bil="2" min="1" max="100" inputmode="numeric" placeholder="ketik" aria-label="Bilangan C" />
+              </div>
+            </div>
+            <p class="cara">Bilangan <b>A</b> ditandai <b>biru</b>, <b>B</b> <b>orange</b>, dan <b>C</b> <b>hijau</b>. Bila dua penanda <b>menumpuk</b> pada angka yang sama, kotaknya menjadi <b>merah</b>. Kamu bebas mengetik bilangan dari 1 sampai 100.</p>
+          </div>
+        </div>
+        <div class="papan-bagian">
+          <h3>Papan Angka 1&ndash;100</h3>
+          <div class="papan-grid" id="papan-lanjut"></div>
+          <div class="aksi">
+            <button type="button" class="periksa" id="btn-periksa-lanjut">Periksa Jawaban</button>
+            <button type="button" class="hapus-btn" id="btn-hapus-tanda">Hapus Tanda</button>
+            <button type="button" class="hapus-btn" id="btn-ulang-lanjut">Mulai Ulang</button>
+          </div>
+          <div class="papan-info" id="papan-info-lanjut">Ketik bilangan A, lalu klik penanda A untuk mulai menandai.</div>
+        </div>
+      </div>
+      <button id="btn-prev-lanjut" class="nav-prev" aria-label="Sebelumnya">
+        <img src="Asset/Sebelumnya.png" alt="Sebelumnya" draggable="false" />
+      </button>
+      <button id="btn-next-lanjut" class="nav-next" aria-label="Selanjutnya">
+        <img src="Asset/Selanjutnya.png" alt="Selanjutnya" draggable="false" />
+      </button>
+    </div>
+
+    <!-- Modal Pengaturan -->
+    <div id="overlay">
+      <div id="panel-setting" role="dialog" aria-modal="true" aria-label="Pengaturan Suara">
+        <h2>PENGATURAN</h2>
+        <p class="sub">Atur suara dan tampilan</p>
+        <div class="row-setting">
+          <span>🎵 Musik Latar</span>
+          <div id="tg-music" class="toggle on" role="switch" aria-checked="true" tabindex="0"></div>
+        </div>
+        <div class="row-setting">
+          <span>🔔 Efek Suara</span>
+          <div id="tg-sfx" class="toggle on" role="switch" aria-checked="true" tabindex="0"></div>
+        </div>
+        <div class="row-setting">
+          <span>⛶ Layar Penuh</span>
+          <div id="tg-full" class="toggle" role="switch" aria-checked="false" tabindex="0"></div>
+        </div>
+        <div class="row-setting" style="display:block">
+          <span style="display:block; margin-bottom:12px">🔊 Volume Musik Latar</span>
+          <input id="vol" type="range" min="0" max="100" value="100" />
+        </div>
+        <button id="btn-tutup">TUTUP</button>
+      </div>
+    </div>
+
+    <div id="toast"></div>
+
+    <!-- Modal Informasi Pengembang (papan tulis) -->
+    <div id="overlay-dev">
+      <div id="panel-dev" role="dialog" aria-modal="true" aria-label="Informasi Pengembang">
+        <img class="papan" src="Asset/Papan%20Tulis%20.png" alt="" draggable="false" />
+        <div class="dev-content">
+          <div class="dev-judul">INFORMASI PENGEMBANG</div>
+          <div class="dev-sub">KELFA QUEST &mdash; Media Pembelajaran Digital Matematika Kelas V Sekolah Dasar</div>
+          <p class="dev-par">KELFA QUEST merupakan media pembelajaran digital yang dikembangkan untuk membantu murid kelas V Sekolah Dasar mempelajari matematika pada materi KPK secara lebih menarik, interaktif, dan menyenangkan. Media ini dirancang untuk mendukung pemahaman murid melalui kegiatan belajar yang melibatkan eksplorasi dan interaksi langsung dengan materi pembelajaran.</p>
+          <div class="dev-judul" style="font-size:40px; letter-spacing:1px; margin-top:4px">IDENTITAS PENGEMBANG</div>
+          <div class="dev-id-row">
+            <img class="dev-foto" src="Asset/profil%20pengembang%20transparan.png" alt="Foto Pengembang" draggable="false" />
+            <table class="dev-id">
+              <tr><td class="c1"></td><td class="c2">Nama</td><td class="c3">:</td><td>M. Akram Arabi</td></tr>
+              <tr><td class="c1"></td><td class="c2">Asal LPTK</td><td class="c3">:</td><td>Universitas Jambi</td></tr>
+              <tr><td class="c1"></td><td class="c2">NIM</td><td class="c3">:</td><td>A2G125071</td></tr>
+              <tr><td class="c1"></td><td class="c2">Program Studi PPG</td><td class="c3">:</td><td>Pendidikan Guru Sekolah Dasar</td></tr>
+            </table>
+          </div>
+          <div class="dev-ttd">
+            <p>Saya mengucapkan terima kasih kepada Bapak Dr. Drs. Eko Kuntarto, M.Pd. M.Comp.Eng selaku dosen pembimbing yang telah memberikan bimbingan, arahan, dan dukungan dalam proses pengembangan media pembelajaran digital KELFA QUEST. Terima kasih juga atas ilmu dan masukan yang diberikan sehingga media ini dapat dikembangkan sebagai salah satu upaya mendukung pembelajaran matematika di sekolah dasar.</p>
+            <p>Semoga KELFA QUEST dapat memberikan manfaat bagi murid dan menjadi salah satu alternatif media pembelajaran yang membantu menciptakan pengalaman belajar matematika yang lebih bermakna.</p>
+            <p><strong>Pengembang,</strong></p>
+            <p><strong>M. Akram Arabi</strong></p>
+          </div>
+        </div>
+        <button id="btn-tutup-dev">TUTUP</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AUDIO -->
+<audio id="bgm" src="Asset/Sound/Musik%20Background.mp3" loop preload="auto"></audio>
+<audio id="sfx-klik" src="Asset/Sound/Klik%20button.mp3" preload="auto"></audio>
+<audio id="vo-pengenalan" src="Asset/Sound/Teks%20pengenalan.wav" preload="auto"></audio>
+<audio id="vo-tujuan" src="Asset/Sound/Tujuan%20pembalajaran.mp3" preload="auto"></audio>
+
+<script>
+(function(){
+  // ===== 1. SCALING FIXED 1920x1080 =====
+  // Stage selalu 1920x1080, diskala agar pas di layar apa pun tanpa distorsi.
+  var stage = document.getElementById('stage');
+  function fitStage(){
+    var s = Math.min(window.innerWidth/1920, window.innerHeight/1080);
+    stage.style.transform = 'scale(' + s + ')';
+  }
+  window.addEventListener('resize', fitStage);
+  fitStage();
+
+  // ===== 2. AUDIO =====
+  var bgm = document.getElementById('bgm');
+  var sfxKlik = document.getElementById('sfx-klik');
+  var audioHint = document.getElementById('audio-hint');
+  var musicOn = true, sfxOn = true;
+  // Musik latar 30% = 0.3, SFX full 100% = 1.0
+  bgm.volume = 0.3;
+  sfxKlik.volume = 1.0;
+
+  // Browser memblokir autoplay -> musik tidak dikunci permanen, tapi terus dicoba
+  // pada setiap interaksi sampai benar-benar berbunyi (dulu: satu kali gagal = musik mati).
+  function hintSembunyi(){ audioHint.style.display = 'none'; }
+  function hintMuncul(){ audioHint.style.display = 'block'; }
+  function mainkanMusik(){
+    if(!musicOn || !bgm.paused) return;
+    try{
+      var p = bgm.play();
+      if(p && p.then){ p.then(hintSembunyi).catch(function(){}); }
+    }catch(e){}
+  }
+  bgm.addEventListener('playing', hintSembunyi);
+  bgm.addEventListener('canplay', function(){ if(musicOn) mainkanMusik(); });
+  function unlockAudio(){ mainkanMusik(); }
+  // dipakai di fase capture + semua jenis event, supaya tetap jalan walau ada
+  // handler lain yang menghentikan event (klik di mana saja pada layar Home)
+  ['pointerdown','mousedown','touchstart','click','keydown'].forEach(function(ev){
+    document.addEventListener(ev, unlockAudio, true);
+  });
+  // jaring pengaman: musik selalu dicoba ulang tiap detik, dan selama musik belum
+  // berjalan tetap ditampilkan "Klik di mana saja untuk mengaktifkan suara"
+  setInterval(function(){
+    if(!musicOn){ hintSembunyi(); return; }
+    if(bgm.paused){ hintMuncul(); mainkanMusik(); } else { hintSembunyi(); }
+  }, 700);
+
+  function playKlik(){
+    if(!sfxOn) return;
+    try{ sfxKlik.currentTime = 0; sfxKlik.play().catch(function(){}); }catch(e){}
+  }
+
+  // ===== 3. MODAL PENGATURAN =====
+  var overlay = document.getElementById('overlay');
+  var btnSetting = document.getElementById('btn-setting');
+  var btnSettingMenu = document.getElementById('btn-setting-menu');
+  var btnSettingIntro = document.getElementById('btn-setting-intro');
+  var btnSettingTujuan = document.getElementById('btn-setting-tujuan');
+  var btnSettingKosong = document.getElementById('btn-setting-kosong');
+  var btnSettingNext = document.getElementById('btn-setting-next');
+  var btnSettingKpk = document.getElementById('btn-setting-kpk');
+  var btnSettingLanjut = document.getElementById('btn-setting-lanjut');
+  var btnHomeLanjut = document.getElementById('btn-home-lanjut');
+  var btnPrevLanjut = document.getElementById('btn-prev-lanjut');
+  var btnNextLanjut = document.getElementById('btn-next-lanjut');
+  var btnHomeMenu = document.getElementById('btn-home-menu');
+  var btnTutup = document.getElementById('btn-tutup');
+  var tgMusic = document.getElementById('tg-music');
+  var tgSfx = document.getElementById('tg-sfx');
+  var tgFull = document.getElementById('tg-full');
+  var vol = document.getElementById('vol');
+
+  function openSetting(e){ if(e){ e.stopPropagation(); } playKlik(); overlay.classList.add('show'); }
+  btnSetting.addEventListener('click', openSetting);
+  btnSettingMenu.addEventListener('click', openSetting);
+  btnSettingNext.addEventListener('click', openSetting);
+  btnSettingIntro.addEventListener('click', openSetting);
+  btnSettingTujuan.addEventListener('click', openSetting);
+  btnSettingKosong.addEventListener('click', openSetting);
+  btnSettingKpk.addEventListener('click', openSetting);
+btnSettingLanjut.addEventListener('click', openSetting);
+  btnTutup.addEventListener('click', function(){ playKlik(); overlay.classList.remove('show'); });
+  overlay.addEventListener('click', function(e){ if(e.target===overlay){ overlay.classList.remove('show'); } });
+
+  // Tombol informasi pengembang (hanya tampil di layar Home)
+  var btnInfo = document.getElementById('btn-info');
+  var overlayDev = document.getElementById('overlay-dev');
+  var btnTutupDev = document.getElementById('btn-tutup-dev');
+  btnInfo.addEventListener('click', function(e){ if(e){ e.stopPropagation(); } playKlik(); overlayDev.classList.add('show'); });
+  btnTutupDev.addEventListener('click', function(){ playKlik(); overlayDev.classList.remove('show'); });
+  overlayDev.addEventListener('click', function(e){ if(e.target===overlayDev){ overlayDev.classList.remove('show'); } });
+
+  function setToggle(el, on){ el.classList.toggle('on', on); el.setAttribute('aria-checked', on ? 'true':'false'); }
+  tgMusic.addEventListener('click', function(){
+    musicOn = !musicOn; setToggle(tgMusic, musicOn); playKlik();
+    if(musicOn){ hintSembunyi(); mainkanMusik(); } else { bgm.pause(); }
+  });
+  tgSfx.addEventListener('click', function(){
+    sfxOn = !sfxOn; setToggle(tgSfx, sfxOn); playKlik();
+  });
+  // Fullscreen ON/OFF
+  function isFull(){ return !!(document.fullscreenElement || document.webkitFullscreenElement); }
+  function updateFullToggle(){ setToggle(tgFull, isFull()); }
+  tgFull.addEventListener('click', function(){
+    playKlik();
+    try{
+      if(!isFull()){
+        var el = document.documentElement;
+        if(el.requestFullscreen){ el.requestFullscreen().catch(function(){}); }
+        else if(el.webkitRequestFullscreen){ el.webkitRequestFullscreen(); }
+      } else {
+        if(document.exitFullscreen){ document.exitFullscreen().catch(function(){}); }
+        else if(document.webkitExitFullscreen){ document.webkitExitFullscreen(); }
+      }
+    }catch(e){}
+    setTimeout(updateFullToggle, 300);
+  });
+  document.addEventListener('fullscreenchange', updateFullToggle);
+  document.addEventListener('webkitfullscreenchange', updateFullToggle);
+  vol.addEventListener('input', function(){
+    var m = vol.value/100;
+    bgm.volume = m * 0.3; // hanya musik latar, SFX tetap full
+  });
+
+  // ===== 4. NAVIGASI: HOME -> PENGENALAN -> TUJUAN -> LAYAR BARU -> MENU MATERI =====
+  var btnMulai = document.getElementById('btn-mulai');
+  var btnPrevTujuan = document.getElementById('btn-prev-tujuan');
+  var btnNextTujuan = document.getElementById('btn-next-tujuan');
+  var btnMulaiBelajar = document.getElementById('btn-mulai-belajar');
+  var btnPrevKosong = document.getElementById('btn-prev-kosong');
+  var btnNextKosong = document.getElementById('btn-next-kosong');
+  var btnHomeKosong = document.getElementById('btn-home-kosong');
+  var btnPrevMenu = document.getElementById('btn-prev-menu');
+var btnNextMenu = document.getElementById('btn-next-menu');
+var btnPrevNext = document.getElementById('btn-prev-next');
+  var btnNextNext = document.getElementById('btn-next-next');
+  var btnHomeNext = document.getElementById('btn-home-next');
+  var btnPrevKpk = document.getElementById('btn-prev-kpk');
+var btnNextKpk = document.getElementById('btn-next-kpk');
+  var btnHomeKpk = document.getElementById('btn-home-kpk');
+  var btnPrevJadwal = document.getElementById('btn-prev-jadwal');
+  var btnNextJadwal = document.getElementById('btn-next-jadwal');
+  var btnHomeJadwal = document.getElementById('btn-home-jadwal');
+  var btnSettJadwal = document.getElementById('btn-setting-jadwal');
+  var btnHomeIntro = document.getElementById('btn-home-intro');
+  var btnHomeTujuan = document.getElementById('btn-home-tujuan');
+  var toast = document.getElementById('toast');
+  var toastTimer = null;
+  function showToast(msg){
+    toast.textContent = msg; toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toast.classList.remove('show'); }, 2600);
+  }
+  // ===== PAPAN ANGKA 1-100 (slide materi kelipatan) =====
+  (function(){
+    var grid = document.getElementById('papan-grid');
+    var info = document.getElementById('papan-info');
+    if(!grid) return;
+    var pilih = 0;
+    var cells = [];
+    for(var i=1;i<=100;i++){
+      var b = document.createElement('b');
+      b.textContent = i;
+      b.setAttribute('data-n', i);
+      grid.appendChild(b);
+      cells.push(b);
+    }
+    function gambar(){
+      for(var j=0;j<cells.length;j++){
+        var v = j + 1;
+        var cls = [];
+        if(pilih > 0 && v % pilih === 0) cls.push('on');
+        if(pilih > 0 && v === pilih) cls.push('pilih');
+        cells[j].className = cls.join(' ');
+      }
+      if(pilih === 0){
+        info.innerHTML = 'Klik salah satu angka untuk melihat kelipatannya.';
+      } else {
+        var hasil = [];
+        for(var k=1;k*pilih<=100;k++){ hasil.push(k*pilih); }
+        info.innerHTML = 'Kelipatan ' + pilih + ': <b>' + hasil.join(', ') + '</b>';
+      }
+    }
+    grid.addEventListener('click', function(e){
+      var t = e.target;
+      if(!t || t.tagName !== 'B') return;
+      playKlik();
+      var n = parseInt(t.getAttribute('data-n'), 10);
+      pilih = (pilih === n) ? 0 : n;
+      gambar();
+    });
+  })();
+
+  // ===== PAPAN KELIPATAN PERSEKUTUAN (pilih 2 bilangan) =====
+  (function(){
+    var grid = document.getElementById('papan-k');
+    var info = document.getElementById('papan-info-k');
+    if(!grid) return;
+    var a = 0, b = 0;
+    var cells = [];
+    for(var i=1;i<=100;i++){
+      var el = document.createElement('b');
+      el.textContent = i;
+      el.setAttribute('data-n', i);
+      grid.appendChild(el);
+      cells.push(el);
+    }
+    // semua kelipatan persekutuan a dan b yang masih di dalam papan 1-100
+    function persekutuan(){
+      var hasil = [], m = Math.max(a, b);
+      for(var k=1;k*m<=100;k++){
+        var v = k * m;
+        if(v % a === 0 && v % b === 0) hasil.push(v);
+      }
+      return hasil;
+    }
+    function gambar(){
+      var sama = (a > 0 && a === b);
+      for(var j=0;j<cells.length;j++){
+        var v = j + 1, cls = [];
+        if(a > 0 && v % a === 0) cls.push('on-a');
+        if(b > 0 && v % b === 0) cls.push('on-b');
+        if(!sama && a > 0 && b > 0 && v % a === 0 && v % b === 0) cls.push('on-k');
+        if(v === a) cls.push('pilih-a');
+        else if(v === b) cls.push('pilih-b');
+        cells[j].className = cls.join(' ');
+      }
+      if(a === 0){
+        info.innerHTML = 'Klik bilangan pertama pada papan angka.';
+      } else if(b === 0){
+        info.innerHTML = 'Bilangan pertama: <b>' + a + '</b>. Klik bilangan kedua.';
+      } else if(sama){
+        info.innerHTML = 'Pilih <b>dua bilangan yang berbeda</b>, ya.';
+      } else {
+        info.innerHTML = 'Kelipatan persekutuan dari ' + a + ' dan ' + b + ': <b>' + persekutuan().join(', ') + '</b>';
+      }
+    }
+    grid.addEventListener('click', function(e){
+      var t = e.target;
+      if(!t || t.tagName !== 'B') return;
+      playKlik();
+      var n = parseInt(t.getAttribute('data-n'), 10);
+      if(n === a) a = 0;
+      else if(n === b) b = 0;
+      else if(a === 0) a = n;
+      else if(b === 0) b = n;
+      else { a = n; b = 0; }
+      gambar();
+    });
+  })();
+
+  // ===== PAPAN KPK (kelipatan persekutuan TERKECIL dari 2 bilangan) =====
+  (function(){
+    var grid = document.getElementById('papan-kpk');
+    var info = document.getElementById('papan-info-kpk');
+    if(!grid) return;
+    var a = 0, b = 0;
+    var cells = [];
+    for(var i=1;i<=100;i++){
+      var el = document.createElement('b');
+      el.textContent = i;
+      el.setAttribute('data-n', i);
+      grid.appendChild(el);
+      cells.push(el);
+    }
+    function persekutuan(){
+      var hasil = [], m = Math.max(a, b);
+      for(var k=1;k*m<=100;k++){
+        var v = k * m;
+        if(v % a === 0 && v % b === 0) hasil.push(v);
+      }
+      return hasil;
+    }
+    function gambar(){
+      var sama = (a > 0 && a === b);
+      var list = (!sama && a > 0 && b > 0) ? persekutuan() : [];
+      var kpk = list.length ? list[0] : 0;
+      for(var j=0;j<cells.length;j++){
+        var v = j + 1, cls = [];
+        if(a > 0 && v % a === 0) cls.push('on-a');
+        if(b > 0 && v % b === 0) cls.push('on-b');
+        if(!sama && a > 0 && b > 0 && v % a === 0 && v % b === 0) cls.push('on-k');
+        if(kpk > 0 && v === kpk) cls.push('on-kpk');
+        if(v === a) cls.push('pilih-a');
+        else if(v === b) cls.push('pilih-b');
+        cells[j].className = cls.join(' ');
+      }
+      if(a === 0){
+        info.innerHTML = 'Klik bilangan pertama pada papan angka.';
+      } else if(b === 0){
+        info.innerHTML = 'Bilangan pertama: <b>' + a + '</b>. Klik bilangan kedua.';
+      } else if(sama){
+        info.innerHTML = 'Pilih <b>dua bilangan yang berbeda</b>, ya.';
+      } else if(list.length === 0){
+        info.innerHTML = 'Tidak ada kelipatan persekutuan sampai 100.';
+      } else {
+        info.innerHTML = '&#9733; KPK (' + a + ', ' + b + ') = <b>' + kpk + '</b>';
+      }
+    }
+    grid.addEventListener('click', function(e){
+      var t = e.target;
+      if(!t || t.tagName !== 'B') return;
+      playKlik();
+      var n = parseInt(t.getAttribute('data-n'), 10);
+      if(n === a) a = 0;
+      else if(n === b) b = 0;
+      else if(a === 0) a = n;
+      else if(b === 0) b = n;
+      else { a = n; b = 0; }
+      gambar();
+    });
+  })();
+
+  // ===== SLIDE LANJUTAN: PAPAN ANGKA LATIHAN (1-3 bilangan, diketik sendiri) =====
+  // Anak mengetik bilangan A/B/C pada kotak, memilih penanda (A/B/C),
+  // lalu menandai sendiri angka kelipatannya di papan angka 1-100.
+  // Tombol "Periksa Jawaban" menilai penandaan itu (merah salah, kuning terlewat).
+  (function(){
+    var grid = document.getElementById('papan-lanjut');
+    var info = document.getElementById('papan-info-lanjut');
+    var btnPeriksa = document.getElementById('btn-periksa-lanjut');
+    var btnHapus   = document.getElementById('btn-hapus-tanda');
+    var btnUlang   = document.getElementById('btn-ulang-lanjut');
+    if(!grid || !info) return;
+    var itemEls    = document.querySelectorAll('#screen-lanjut .bil-item');
+    var inputEls   = document.querySelectorAll('#screen-lanjut .bil-angka');
+    var penandaEls = document.querySelectorAll('#screen-lanjut .pilih-tanda');
+    var jmlEls     = document.querySelectorAll('#screen-lanjut .jml-btn');
+    var MAKS = 100;
+    var HURUF = ['A','B','C'];
+    var CLS   = ['on-a','on-b','on-c'];
+    var WARNA = ['biru','orange','hijau'];
+    var bil = [0,0,0];          // bilangan yang diketik anak
+    var jumlah = 1;             // 1, 2, atau 3 bilangan
+    var aktif = -1;             // penanda yang sedang aktif (-1 = belum dipilih)
+    var pesan = '';             // pesan khusus (mis. bilangan sama)
+    var tanda = [{},{},{}];     // tanda[i][n] = true -> anak menandai n sebagai kelipatan bilangan i
+    var dicek = false;
+    var cells = [];
+    var i, n;
+    function angkaDari(el){
+      var v = parseInt(String(el.value).replace(/[^0-9]/g, ''), 10);
+      return isNaN(v) ? 0 : v;
+    }
+    for(i = 1; i <= MAKS; i++){
+      n = i;
+      var el = document.createElement('b');
+      el.textContent = n;
+      el.setAttribute('data-n', n);
+      grid.appendChild(el);
+      cells.push(el);
+    }
+    function isiBilangan(){
+      var daftar = [], k;
+      for(k = 0; k < jumlah; k++){ if(bil[k] > 0) daftar.push(bil[k]); }
+      return daftar;
+    }
+    function persekutuan(){
+      // kelipatan yang sama dari semua bilangan yang dipilih
+      var hasil = [], daftar = isiBilangan(), d, k, m, v, cocok;
+      if(daftar.length < 2) return hasil;
+      m = 1;
+      for(k = 0; k < daftar.length; k++){ if(daftar[k] > m) m = daftar[k]; }
+      for(v = m; v <= MAKS; v += m){
+        cocok = true;
+        for(k = 0; k < daftar.length; k++){ if(v % daftar[k] !== 0){ cocok = false; break; } }
+        if(cocok) hasil.push(v);
+      }
+      return hasil;
+    }
+    function bilKosong(){
+      for(var k = 0; k < jumlah; k++){ if(bil[k] === 0) return k; }
+      return -1;
+    }
+    function statusSel(n){
+      // mengembalikan kelas untuk satu kotak papan angka
+      var k, mult, sudah;
+      if(dicek){
+        for(k = 0; k < jumlah; k++){
+          if(!bil[k]) continue;
+          mult = (n % bil[k] === 0);
+          sudah = !!tanda[k][n];
+          if(sudah && !mult) return 'salah';
+        }
+        for(k = 0; k < jumlah; k++){
+          if(!bil[k]) continue;
+          mult = (n % bil[k] === 0);
+          sudah = !!tanda[k][n];
+          if(!sudah && mult) return 'terlewat';
+        }
+      }
+      var jmlTanda = 0, idxTanda = -1;
+      for(k = 0; k < jumlah; k++){
+        if(tanda[k][n]){ jmlTanda++; idxTanda = k; }
+      }
+      if(jmlTanda >= 2) return 'tumpuk';   // 2 penanda menumpuk -> merah
+      if(jmlTanda === 1) return CLS[idxTanda];
+      return '';
+    }
+    function hitung(){
+      var tepat = 0, salah = 0, lewat = 0, daftar = isiBilangan(), k, n2;
+      if(!daftar.length) return { tepat:0, salah:0, lewat:0 };
+      for(n2 = 1; n2 <= MAKS; n2++){
+        var kelas = statusSel(n2);
+        if(kelas === 'salah') salah++;
+        else if(kelas === 'terlewat') lewat++;
+      }
+      tepat = daftar.length ? (MAKS - salah - lewat) : 0;
+      return { tepat: tepat, salah: salah, lewat: lewat };
+    }
+    function gambar(){
+      var j, s, nama, k2, msg = '';
+      for(j = 0; j < cells.length; j++){ cells[j].className = statusSel(j + 1); }
+      // tombol jumlah bilangan
+      for(j = 0; j < jmlEls.length; j++){
+        jmlEls[j].classList.toggle('on', (j + 1) === jumlah);
+      }
+      // kotak bilangan A / B / C
+      for(s = 0; s < itemEls.length; s++){
+        var elItem = itemEls[s];
+        elItem.className = 'bil-item s-' + String.fromCharCode(97 + s) +
+                           (s < jumlah ? '' : ' sembunyi') +
+                           (bil[s] ? '' : ' kosong') +
+                           ((s === aktif && bil[s]) ? ' aktif' : '');
+        if(s < inputEls.length){
+          var teks = bil[s] ? String(bil[s]) : '';
+          if(inputEls[s].value !== teks) inputEls[s].value = teks;
+        }
+        if(s < penandaEls.length) penandaEls[s].disabled = !bil[s];
+      }
+      if(pesan){
+        info.innerHTML = pesan;
+      }else if(bilKosong() >= 0){
+        k2 = bilKosong();
+        info.innerHTML = 'Ketik bilangan <b>' + HURUF[k2] + '</b> pada kotak di atas (1&ndash;100).';
+      }else if(aktif < 0 || !bil[aktif]){
+        info.innerHTML = 'Bilangan sudah lengkap. Klik penanda <b>A</b>, lalu tandai kelipatan A di papan.';
+      }else if(!dicek){
+        nama = [];
+        for(k2 = 0; k2 < jumlah; k2++){ nama.push(HURUF[k2] + ' = ' + bil[k2]); }
+        info.innerHTML = 'Bilangan: ' + nama.join(', ') + '. Penanda <b>' + HURUF[aktif] +
+          '</b> (' + WARNA[aktif] + ') aktif. Klik angka kelipatannya pada papan, lalu tekan <b>Periksa Jawaban</b>.';
+      }else{
+        var h = hitung();
+        if(h.salah === 0 && h.lewat === 0){
+          msg = '&#127881; Hebat! Semua penandaanmu tepat.';
+        }else if(h.salah > 0 && h.lewat > 0){
+          msg = 'Ada yang salah (merah) dan ada yang terlewat (kuning). Coba lagi!';
+        }else if(h.salah > 0){
+          msg = 'Masih ada penandaan yang salah (merah). Ayo perbaiki!';
+        }else{
+          msg = 'Hampir benar! Ada kelipatan yang terlewat (kuning).';
+        }
+        var daftar = isiBilangan();
+        if(daftar.length >= 2){
+          var kp = persekutuan();
+          if(kp.length) msg += ' Kelipatan persekutuan: <b>' + kp.join(', ') + '</b>.';
+        }
+        info.innerHTML = msg;
+      }
+    }
+    function bersihkanTanda(){ tanda = [{},{},{}]; dicek = false; }
+    // tombol jumlah bilangan
+    for(i = 0; i < jmlEls.length; i++){
+      (function(btn){
+        btn.addEventListener('click', function(){
+          playKlik();
+          var jml = parseInt(btn.getAttribute('data-jml'), 10);
+          if(jml === jumlah) return;
+          jumlah = jml; aktif = -1; dicek = false; pesan = '';
+          for(var k = jumlah; k < 3; k++){
+            bil[k] = 0;
+            if(k < inputEls.length) inputEls[k].value = '';
+          }
+          bersihkanTanda();
+          gambar();
+        });
+      })(jmlEls[i]);
+    }
+    // tombol penanda A / B / C -> menandai kelipatan bilangan itu
+    for(i = 0; i < penandaEls.length; i++){
+      (function(btn){
+        btn.addEventListener('click', function(){
+          var s = parseInt(btn.getAttribute('data-tanda'), 10);
+          pesan = '';
+          if(!bil[s]){ gambar(); return; }
+          playKlik();
+          aktif = s; dicek = false;
+          gambar();
+        });
+      })(penandaEls[i]);
+    }
+    // kotak bilangan: anak mengetik sendiri
+    for(i = 0; i < inputEls.length; i++){
+      (function(el){
+        el.addEventListener('input', function(){
+          var k = parseInt(el.getAttribute('data-bil'), 10);
+          var v = angkaDari(el);
+          pesan = '';
+          if(v > MAKS){ v = MAKS; el.value = String(MAKS); }
+          if(v > 0){
+            for(var k2 = 0; k2 < jumlah; k2++){
+              if(k2 !== k && bil[k2] === v){
+                pesan = 'Bilangan <b>' + HURUF[k] + '</b> tidak boleh sama dengan <b>' + HURUF[k2] + '</b>. Ketik bilangan lain.';
+                v = 0; el.value = '';
+                break;
+              }
+            }
+          }
+          bil[k] = v;
+          tanda[k] = {};
+          dicek = false;
+          if(aktif >= 0 && !bil[aktif]) aktif = -1;
+          gambar();
+        });
+        el.addEventListener('focus', function(){
+          var k = parseInt(el.getAttribute('data-bil'), 10);
+          if(bil[k]){ aktif = k; dicek = false; pesan = ''; gambar(); }
+        });
+      })(inputEls[i]);
+    }
+    // klik angka pada papan -> menandai kelipatan penanda yang aktif
+    grid.addEventListener('click', function(e){
+      var t = e.target;
+      if(!t || t.tagName !== 'B') return;
+      if(aktif < 0 || !bil[aktif]){ pesan = ''; gambar(); return; }
+      playKlik();
+      var n = parseInt(t.getAttribute('data-n'), 10);
+      pesan = ''; dicek = false;
+      if(tanda[aktif][n]) delete tanda[aktif][n];
+      else tanda[aktif][n] = true;
+      gambar();
+    });
+    btnPeriksa.addEventListener('click', function(){
+      playKlik();
+      pesan = '';
+      if(bilKosong() >= 0){ gambar(); return; }
+      dicek = true;
+      gambar();
+    });
+    btnHapus.addEventListener('click', function(){ playKlik(); pesan = ''; bersihkanTanda(); gambar(); });
+    btnUlang.addEventListener('click', function(){
+      playKlik();
+      bil = [0,0,0]; aktif = -1; dicek = false; pesan = '';
+      for(i = 0; i < inputEls.length; i++){ inputEls[i].value = ''; }
+      bersihkanTanda(); gambar();
+    });
+    gambar();
+  })();
+
+  // ===== KALENDER JADWAL DIMAS: OKTOBER 2026 =====
+  // Kalender asli (ada nama hari). Mulai KOSONG: anak menandai sendiri.
+  (function(){
+    var grid = document.getElementById('kalender-jadwal');
+    var info = document.getElementById('info-kalender');
+    if(!grid) return;
+    var HARI = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'];
+    var AWAL = 3;   // 1 Oktober 2026 = Kamis -> 3 kotak kosong sebelum tanggal 1
+    var JML = 31;
+    var CLS = { a:'on-a', b:'on-b', c:'on-c' };
+    var NAMA = { a:'📚 Belajar kelompok', b:'⚽ Sepak bola', c:'🎵 Musik' };
+    var aktif = 'a';
+    var tanda = {};  // tanda[tanggal] = { a:true, ... }
+    var sel = {}, i, j, el, jenisEls;
+    // nama hari
+    for(i = 0; i < 7; i++){
+      el = document.createElement('span');
+      el.className = 'hari';
+      el.textContent = HARI[i];
+      grid.appendChild(el);
+    }
+    // kotak kosong sebelum tanggal 1
+    for(i = 0; i < AWAL; i++){
+      el = document.createElement('span');
+      el.className = 'kal-blank';
+      el.setAttribute('aria-hidden', 'true');
+      grid.appendChild(el);
+    }
+    // tanggal 1..31 (belum ditandai)
+    for(j = 1; j <= JML; j++){
+      el = document.createElement('b');
+      el.className = 'tgl';
+      el.textContent = j;
+      el.setAttribute('data-tgl', j);
+      grid.appendChild(el);
+      sel[j] = el;
+      tanda[j] = {};
+    }
+    function gambar(){
+      var n, kk, jml, warna;
+      for(n = 1; n <= JML; n++){
+        jml = 0; warna = '';
+        for(kk in tanda[n]){
+          if(tanda[n][kk]){ jml++; warna = kk; }
+        }
+        sel[n].className = 'tgl' + (jml >= 2 ? ' tumpuk' : (jml === 1 ? ' ' + CLS[warna] : ''));
+      }
+      for(i = 0; i < jenisEls.length; i++){
+        jenisEls[i].classList.toggle('on', jenisEls[i].getAttribute('data-jenis') === aktif);
+      }
+      if(info){
+        info.innerHTML = 'Menandai: <b>' + NAMA[aktif] + '</b>. Klik tanggal untuk menandai/menghapus. Kotak <b>merah</b> = dua kegiatan pada tanggal yang sama.';
+      }
+    }
+    jenisEls = document.querySelectorAll('#screen-jadwal .kalender-kontrol .tanda-btn[data-jenis]');
+    for(i = 0; i < jenisEls.length; i++){
+      (function(btn){
+        btn.addEventListener('click', function(){
+          aktif = btn.getAttribute('data-jenis');
+          playKlik();
+          gambar();
+        });
+      })(jenisEls[i]);
+    }
+    grid.addEventListener('click', function(e){
+      var t = e.target;
+      if(!t || t.tagName !== 'B') return;
+      var d = parseInt(t.getAttribute('data-tgl'), 10);
+      if(!d) return;
+      if(tanda[d][aktif]) delete tanda[d][aktif];
+      else tanda[d][aktif] = true;
+      playKlik();
+      gambar();
+    });
+    var btnReset = document.getElementById('btn-hapus-jadwal');
+    if(btnReset){
+      btnReset.addEventListener('click', function(){
+        playKlik();
+        for(var n = 1; n <= JML; n++){ tanda[n] = {}; }
+        gambar();
+      });
+    }
+    gambar();
+  })();
+
+  // ===== 4 PERTANYAAN PEMANTIK: anak mengisi jawabannya sendiri =====
+  // Anak mengetuk angka detik yang ia pilih, lalu menekan "Periksa".
+  (function(){
+    var daftar = document.getElementById('daftar-tanya');
+    if(!daftar) return;
+    var MAKS = 60;   // timer 1 menit -> detik 1 sampai 60
+    function kelipatan(n){
+      var a = [], k;
+      for(k = n; k <= MAKS; k += n) a.push(k);
+      return a;
+    }
+    // 1 = kelipatan lampu A, 2 = kelipatan lampu B, 3 = keduanya (irisan), 4 = yang paling kecil
+    var KUNCI = [ kelipatan(3), kelipatan(6), kelipatan(6), [6] ];
+
+    var kotak = daftar.getElementsByClassName('tanya-jawab');
+    var s, n, i;
+    for(i = 0; i < kotak.length; i++){
+      var kunci = KUNCI[i] || [];
+      kotak[i].setAttribute('data-kunci', kunci.join(','));
+      s = '';
+      for(n = 1; n <= MAKS; n++){
+        s += '<button type="button" class="num" data-n="' + n + '">' + n + '</button>';
+      }
+      kotak[i].getElementsByClassName('isi')[0].innerHTML =
+        '<div class="grid-angka">' + s + '</div>' +
+        '<div class="aksi"><button type="button" class="periksa">Periksa</button>' +
+        '<button type="button" class="hapus-btn">Hapus</button>' +
+        '<span class="hasil sembunyi"></span></div>';
+    }
+
+    function benar(box){
+      var k = box.getAttribute('data-kunci') || '';
+      return k.length ? k.split(',') : [];
+    }
+    function tandai(box){
+      var nums = box.getElementsByClassName('num'), dip = 0, i;
+      for(i = 0; i < nums.length; i++){
+        if(nums[i].classList.contains('dipilih')) dip++;
+      }
+      box.getElementsByClassName('jml')[0].textContent = dip + ' dipilih';
+    }
+    function bersihkan(box){
+      var nums = box.getElementsByClassName('num');
+      for(var i = 0; i < nums.length; i++){
+        nums[i].classList.remove('benar','salah','terlewat');
+      }
+      var hasil = box.getElementsByClassName('hasil')[0];
+      hasil.textContent = '';
+      hasil.classList.add('sembunyi');
+    }
+    function periksa(box){
+      var nums = box.getElementsByClassName('num');
+      var ada = false, i;
+      for(i = 0; i < nums.length; i++){
+        if(nums[i].classList.contains('dipilih')){ ada = true; break; }
+      }
+      var hasil = box.getElementsByClassName('hasil')[0];
+      if(!ada){
+        hasil.textContent = 'Belum ada angka yang dipilih. Klik dulu angka yang menurutmu benar.';
+        hasil.style.color = '#8a5a12';
+        hasil.classList.remove('sembunyi');
+        return;
+      }
+      var kunci = benar(box), peta = {};
+      for(i = 0; i < kunci.length; i++) peta[kunci[i]] = true;
+      var tepat = 0, salah = 0, lewat = 0;
+      for(i = 0; i < nums.length; i++){
+        var b = nums[i], n = b.getAttribute('data-n');
+        b.classList.remove('benar','salah','terlewat');
+        if(b.classList.contains('dipilih')){
+          if(peta[n]){ b.classList.add('benar'); tepat++; }
+          else { b.classList.add('salah'); salah++; }
+        } else if(peta[n]){
+          b.classList.add('terlewat'); lewat++;
+        }
+      }
+      if(salah === 0 && lewat === 0){
+        hasil.textContent = '🎉 Hebat! Semua jawaban kamu tepat.';
+        hasil.style.color = '#166534';
+      } else if(salah > 0 && lewat > 0){
+        hasil.textContent = 'Ada jawaban salah (merah) dan ada yang terlewat (kuning). Coba lagi!';
+        hasil.style.color = '#8a5a12';
+      } else if(salah > 0){
+        hasil.textContent = 'Masih ada jawaban yang salah (merah). Ayo perbaiki!';
+        hasil.style.color = '#b91c1c';
+      } else {
+        hasil.textContent = 'Hampir benar! Yang terlewat ditandai kuning.';
+        hasil.style.color = '#8a5a12';
+      }
+      hasil.classList.remove('sembunyi');
+    }
+
+    daftar.addEventListener('click', function(e){
+      var el = e.target;            // elemen yang diklik, jangan diubah saat naik ke induk
+      var t = el, box = null;
+      while(t && t !== daftar){
+        if(t.className && (' ' + t.className + ' ').indexOf(' tanya-jawab ') >= 0){ box = t; break; }
+        t = t.parentNode;
+      }
+      if(!box) return;
+      var c = ' ' + (el.className || '') + ' ';
+      if(c.indexOf(' num ') >= 0){
+        playKlik();
+        el.classList.toggle('dipilih');
+        el.classList.remove('benar','salah','terlewat');
+        tandai(box);
+      } else if(c.indexOf(' periksa ') >= 0){
+        playKlik();
+        periksa(box);
+      } else if(c.indexOf(' hapus-btn ') >= 0){
+        playKlik();
+        var nums = box.getElementsByClassName('num');
+        for(var i = 0; i < nums.length; i++) nums[i].classList.remove('dipilih','benar','salah','terlewat');
+        bersihkan(box);
+        tandai(box);
+      }
+    });
+  })();
+
+  // ===== ANIMASI LAMPU: Lampu A tiap 3 detik, Lampu B tiap 6 detik =====
+  // Timer berjalan 1 menit. Kedua lampu mulai dari keadaan MATI pada detik ke-0.
+  var stopLampu;
+  (function(){
+    var la = document.getElementById('lampu-a');
+    var lb = document.getElementById('lampu-b');
+    var angka = document.getElementById('timer-angka');
+    var btnMulai = document.getElementById('btn-mulai-lampu');
+    var btnUlang = document.getElementById('btn-ulang-lampu');
+    if(!la || !lb || !angka || !btnMulai || !btnUlang) return;
+    var LA = 3, LB = 6;
+    var DURASI = 60;   // timer 1 menit
+    var NYALA = 0.75;  // berapa lama lampu tetap menyala, dalam detik
+    var raf = 0, t0 = 0, jalan = false;
+
+    function gambar(s){
+      // s > 0 -> pada detik ke-0 kedua lampu tetap mati
+      var aNyala = (s > 0) && ((s % LA) < NYALA);
+      var bNyala = (s > 0) && ((s % LB) < NYALA);
+      la.classList.toggle('nyala', aNyala);
+      lb.classList.toggle('nyala', bNyala);
+      var d = String(Math.floor(s));
+      if(angka.textContent !== d) angka.textContent = d;
+    }
+    function loop(ts){
+      if(!jalan) return;
+      if(!t0) t0 = ts;
+      var d = (ts - t0) / 1000;
+      if(d >= DURASI){ keAwal(); return; }   // sudah 1 menit -> kembali ke awal
+      gambar(d);
+      raf = requestAnimationFrame(loop);
+    }
+    // tombol Mulai: nyalakan timer dari detik ke-0
+    function mulai(){
+      if(jalan) return;
+      jalan = true; t0 = 0;
+      btnMulai.disabled = true;
+      btnUlang.disabled = false;
+      raf = requestAnimationFrame(loop);
+    }
+    // kembali ke keadaan awal: lampu padam, angka 0, tombol "Mulai" aktif lagi
+    function keAwal(){
+      jalan = false; t0 = 0;
+      if(raf){ cancelAnimationFrame(raf); raf = 0; }
+      la.classList.remove('nyala');
+      lb.classList.remove('nyala');
+      angka.textContent = '0';
+      btnMulai.disabled = false;
+      btnUlang.disabled = true;
+    }
+    btnMulai.addEventListener('click', function(){ playKlik(); mulai(); });
+    btnUlang.addEventListener('click', function(){ playKlik(); keAwal(); });
+    // dipakai showScreen(): lampu mati & kembali ke awal saat layar ditinggalkan
+    stopLampu = keAwal;
+    keAwal();
+  })();
+
+  // Ganti layar aktif (hanya satu .screen.active)
+  var screens = ['screen-home','screen-intro','screen-tujuan','screen-kosong','screen-menu','screen-next','screen-kpk','screen-lanjut','screen-jadwal'];
+  function showScreen(id, restore){
+    screens.forEach(function(s){
+      document.getElementById(s).classList.toggle('active', s===id);
+    });
+    if(id === 'screen-intro'){
+      if(restore && introDone){ restoreIntro(); } else { startIntro(); }
+    } else { stopIntro(); }
+    if(id === 'screen-tujuan'){ playTujuan(); } else { stopTujuan(); }
+    // lampu hanya nyala setelah tombol "Mulai" ditekan; hentikan kalau pindah layar
+    if(id !== 'screen-kosong'){ stopLampu(); }
+  }
+  function currentScreen(){
+    for(var i=0;i<screens.length;i++){
+      if(document.getElementById(screens[i]).classList.contains('active')) return screens[i];
+    }
+    return 'screen-home';
+  }
+  // Jika pengenalan sudah pernah selesai (introDone), tombol Mulai hanya menampilkan
+  // kondisi akhir animasi - tidak mengulang. Animasi penuh hanya saat halaman di-refresh.
+  btnMulai.addEventListener('click', function(){ playKlik(); showScreen('screen-intro', true); });
+  btnPrevTujuan.addEventListener('click', function(){ playKlik(); showScreen('screen-intro', true); });
+  // jangan teruskan klik ke balon (balon = lanjut dialog)
+  btnMulaiBelajar.addEventListener('click', function(e){ if(e && e.stopPropagation) e.stopPropagation(); playKlik(); showScreen('screen-tujuan'); });
+  btnNextTujuan.addEventListener('click', function(){ playKlik(); showScreen('screen-kosong'); });
+  btnPrevKosong.addEventListener('click', function(){ playKlik(); showScreen('screen-tujuan'); });
+  btnNextKosong.addEventListener('click', function(){ playKlik(); showScreen('screen-menu'); });
+  btnPrevMenu.addEventListener('click', function(){ playKlik(); showScreen('screen-kosong'); });
+  btnNextMenu.addEventListener('click', function(){ playKlik(); showScreen('screen-next'); });
+  btnPrevNext.addEventListener('click', function(){ playKlik(); showScreen('screen-menu'); });
+  btnNextNext.addEventListener('click', function(){ playKlik(); showScreen('screen-kpk'); });
+  btnPrevKpk.addEventListener('click', function(){ playKlik(); showScreen('screen-next'); });
+btnNextKpk.addEventListener('click', function(){ playKlik(); showScreen('screen-lanjut'); });
+// LAYAR 5 (lanjutan): navigasi dulu, materinya menyusul
+btnHomeLanjut.addEventListener('click', function(){ playKlik(); showScreen('screen-home'); });
+btnPrevLanjut.addEventListener('click', function(){ playKlik(); showScreen('screen-kpk'); });
+btnNextLanjut.addEventListener('click', function(){ playKlik(); showScreen('screen-jadwal'); });
+btnHomeJadwal.addEventListener('click', function(){ playKlik(); showScreen('screen-home'); });
+btnSettJadwal.addEventListener('click', openSetting);
+btnPrevJadwal.addEventListener('click', function(){ playKlik(); showScreen('screen-lanjut'); });
+btnNextJadwal.addEventListener('click', function(){ playKlik(); showToast('Materi ini sedang disiapkan.'); });
+  btnHomeIntro.addEventListener('click', function(){ playKlik(); showScreen('screen-home'); });
+  btnHomeTujuan.addEventListener('click', function(){ playKlik(); showScreen('screen-home'); });
+  btnHomeKosong.addEventListener('click', function(){ playKlik(); showScreen('screen-home'); });
+  btnHomeMenu.addEventListener('click', function(){ playKlik(); showScreen('screen-home'); });
+  btnHomeNext.addEventListener('click', function(){ playKlik(); showScreen('screen-home'); });
+  btnHomeKpk.addEventListener('click', function(){ playKlik(); showScreen('screen-home'); });
+  // Akses keyboard: Enter = maju / Escape = tutup
+  document.addEventListener('keydown', function(e){
+    var modal = overlay.classList.contains('show') || overlayDev.classList.contains('show');
+    if(e.key === 'Escape'){ overlay.classList.remove('show'); overlayDev.classList.remove('show'); return; }
+    if(e.key === 'Enter' && !modal){
+      var cur = currentScreen();
+      if(cur==='screen-home'){ btnMulai.click(); }
+      else if(cur==='screen-intro'){ if(btnMulaiBelajar.classList.contains('show')){ btnMulaiBelajar.click(); } else { skipIntro(); } }
+      else if(cur==='screen-tujuan'){ btnNextTujuan.click(); }
+      else if(cur==='screen-kosong'){ btnNextKosong.click(); }
+      else if(cur==='screen-menu'){ btnNextMenu.click(); }
+      else if(cur==='screen-next'){ btnNextNext.click(); }
+      else if(cur==='screen-kpk'){ btnNextKpk.click(); }
+      else if(cur==='screen-jadwal'){ btnNextJadwal.click(); }
+      else if(cur==='screen-lanjut'){ btnNextLanjut.click(); }
+    }
+    if(e.key === 'ArrowRight' && !modal){
+      if(currentScreen()==='screen-intro'){ if(btnMulaiBelajar.classList.contains('show')){ btnMulaiBelajar.click(); } else { skipIntro(); } }
+      else if(currentScreen()==='screen-tujuan'){ btnNextTujuan.click(); }
+      else if(currentScreen()==='screen-kosong'){ btnNextKosong.click(); }
+      else if(currentScreen()==='screen-menu'){ btnNextMenu.click(); }
+      else if(currentScreen()==='screen-next'){ btnNextNext.click(); }
+      else if(currentScreen()==='screen-kpk'){ btnNextKpk.click(); }
+      else if(currentScreen()==='screen-jadwal'){ btnNextJadwal.click(); }
+      else if(currentScreen()==='screen-lanjut'){ btnNextLanjut.click(); }
+    }
+    if(e.key === 'ArrowLeft' && !modal){
+      if(currentScreen()==='screen-tujuan'){ btnPrevTujuan.click(); }
+      else if(currentScreen()==='screen-kosong'){ btnPrevKosong.click(); }
+      else if(currentScreen()==='screen-menu'){ btnPrevMenu.click(); }
+      else if(currentScreen()==='screen-next'){ btnPrevNext.click(); }
+      else if(currentScreen()==='screen-kpk'){ btnPrevKpk.click(); }
+      else if(currentScreen()==='screen-lanjut'){ btnPrevLanjut.click(); }
+    }
+  });
+
+  // ===== 6. DIALOG PEMBUKA (KARAKTER RAYA) =====
+  // t0 = detik popup mulai tampil | te = detik suara kalimat selesai | t1 = detik popup berikutnya mulai
+  // hasil analisis gelombang suara Teks pengenalan.wav (bagian "faktor persekutuan terbesar FPB" sudah dipotong, durasi 21.58 detik)
+  var introData = [
+    { t0:0.00,  t1:1.82,  te:1.42,  img:'Menyapa.png', text:'Halo teman-teman,' },
+    { t0:1.82,  t1:4.70,  te:4.20,  img:'Menyapa.png', text:'aku Raya, teman belajar kalian.' },
+    { t0:4.70,  t1:8.26,  te:7.72,  img:'Hebat.png',   text:'Selamat datang di Kelfa Quest!' },
+    { t0:8.26,  t1:13.45, te:13.20, img:'Tau.png',     text:'Hari ini kita akan belajar tentang kelipatan persekutuan terkecil KPK' },
+    { t0:13.45, t1:17.30, te:16.80, img:'Happy.png',   text:'dengan cara yang seru dan menyenangkan.' },
+    { t0:17.30, t1:19.35, te:18.95, img:'Kaget.png',   text:'Sudah siap belajar bersama Raya?' },
+    { t0:19.35, t1:20.50, te:20.25, img:'Hebat.png',   text:'Yuk, kita mulai.' },
+    { t0:20.50, t1:21.58, te:21.25, img:'Happy.png',   text:'Hihihi.' }
+  ];
+  var rayaImg    = document.getElementById('raya-img');
+  var bubble     = document.getElementById('bubble');
+  var bubbleText = document.getElementById('bubble-text');
+  var introDots  = document.getElementById('intro-dots');
+  var vo         = document.getElementById('vo-pengenalan');
+  var typeTimer = null, syncTimer = null, curIdx = -1, wallStart = 0, ts = 1, introDone = false;
+  var REF_END = 21.58; // durasi audio narasi setelah bagian FPB dipotong (detik) -> ts = 1 saat audio termuat normal
+  vo.volume = 1.0;
+
+  introData.forEach(function(){ introDots.appendChild(document.createElement('i')); });
+
+  // skala waktu: samakan dengan durasi audio yang benar-benar termuat (biasanya ~1.0)
+  function refreshScale(){
+    var d = vo.duration;
+    ts = (d && isFinite(d) && d > 0) ? (d / REF_END) : 1;
+  }
+  vo.addEventListener('loadedmetadata', refreshScale);
+
+  // waktu dialog berjalan (dari audio; fallback jam dinding jika audio diblokir)
+  function introTime(){
+    // audio selesai -> tetap di baris terakhir, jangan mundur ke jam dinding
+    if(vo.ended){ return vo.duration > 0 ? vo.duration : (REF_END * ts); }
+    if(!vo.paused && vo.currentTime > 0){ return vo.currentTime; }
+    return (new Date().getTime() - wallStart) / 1000;
+  }
+
+  function showLine(i){
+    curIdx = i;
+    var d = introData[i];
+    // reset tombol Mulai Belajar (hanya muncul di kalimat terakhir, setelah selesai)
+    btnMulaiBelajar.classList.remove('show');
+    bubble.classList.remove('done');
+    introDots.classList.remove('done');
+    // ekspresi ikut berubah
+    rayaImg.src = 'Asset/Animasi%20anak/transparan/' + d.img;
+    rayaImg.classList.remove('pop'); void rayaImg.offsetWidth; rayaImg.classList.add('pop');
+    // balon masuk
+    bubble.classList.remove('in'); void bubble.offsetWidth; bubble.classList.add('in');
+    // titik progres
+    var dots = introDots.children;
+    for(var k=0;k<dots.length;k++){ dots[k].classList.toggle('on', k===i); }
+    // mesin ketik, kecepatan disesuaikan agar selesai tepat di akhir blok audio
+    clearInterval(typeTimer);
+    bubbleText.textContent = '';
+    var dur = Math.max(0, ((d.te || d.t1) - d.t0)) * ts * 1000;
+    var per = Math.max(16, Math.floor(dur / Math.max(1, d.text.length)));
+    var c = 0;
+    typeTimer = setInterval(function(){
+      c++;
+      bubbleText.textContent = d.text.slice(0, c);
+      if(c >= d.text.length){
+        clearInterval(typeTimer);
+        if(i === introData.length - 1){ showCta(); }   // kalimat terakhir selesai -> tombol muncul
+      }
+    }, per);
+  }
+
+  // tampilkan tombol Mulai Belajar di dalam balon
+  function showCta(){
+    btnMulaiBelajar.classList.remove('show'); void btnMulaiBelajar.offsetWidth;
+    btnMulaiBelajar.classList.add('show');
+    bubble.classList.add('done');
+    introDots.classList.add('done');
+    introDone = true;
+  }
+
+  // pantau waktu audio, pindah baris otomatis sesuai timing
+  function syncLoop(){
+    var t = introTime();
+    var idx = -1;
+    for(var i=0;i<introData.length;i++){
+      if(t >= introData[i].t0 * ts && t < introData[i].t1 * ts){ idx = i; break; }
+    }
+    var last = introData.length - 1;
+    if(idx === -1 && t >= introData[last].t1 * ts){ idx = last; }
+    if(idx >= 0 && idx !== curIdx){ showLine(idx); }
+  }
+
+  function startIntro(){
+    introDone = false;
+    curIdx = -1;
+    clearInterval(typeTimer);
+    clearInterval(syncTimer);
+    refreshScale();
+    wallStart = new Date().getTime();
+    try{
+      vo.currentTime = 0;
+      vo.play().catch(function(){});
+    }catch(e){}
+    showLine(0);
+    bgm.volume = 0.12;              // musik latar turun saat narasi jalan
+    syncTimer = setInterval(syncLoop, 80);
+  }
+  function stopIntro(){
+    clearInterval(typeTimer);
+    clearInterval(syncTimer);
+    try{ vo.pause(); vo.currentTime = 0; }catch(e){}
+    bgm.volume = vol.value/100 * 0.3;
+  }
+  // kembali dari layar Tujuan: tampilkan pengenalan dalam keadaan akhir (tanpa mengulang animasi/narasi)
+  function restoreIntro(){
+    clearInterval(typeTimer);
+    clearInterval(syncTimer);
+    try{ vo.pause(); }catch(e){}
+    var last = introData.length - 1, d = introData[last];
+    curIdx = last;
+    rayaImg.src = 'Asset/Animasi%20anak/transparan/' + d.img;
+    rayaImg.classList.remove('pop'); void rayaImg.offsetWidth; rayaImg.classList.add('pop');
+    bubble.classList.remove('in'); void bubble.offsetWidth; bubble.classList.add('in');
+    bubbleText.textContent = d.text;
+    var dots = introDots.children;
+    for(var k=0;k<dots.length;k++){ dots[k].classList.toggle('on', k===last); }
+    showCta();
+  }
+  // ===== SUARA RAYA DI LAYAR TUJUAN PEMBELAJARAN =====
+  var voTujuan        = document.getElementById('vo-tujuan');
+  var tujuanBubbleTxt = document.getElementById('tujuan-bubble-text');
+  var tujuanFullText  = tujuanBubbleTxt.textContent;
+  var tujuanTimer     = null;
+  // durasi asli 5.12 dtk; ucapan berakhir ~4.85 dtk (hasil analisis gelombang audio)
+  var TUJUAN_DUR = 5.12, TUJUAN_SPEECH_END = 4.85;
+  voTujuan.volume = 1.0;
+  voTujuan.addEventListener('ended', function(){ bgm.volume = vol.value/100 * 0.3; });
+  function playTujuan(){
+    clearInterval(tujuanTimer);
+    tujuanBubbleTxt.textContent = '';
+    try{ voTujuan.currentTime = 0; voTujuan.play().catch(function(){}); }catch(e){}
+    bgm.volume = 0.12;              // musik latar turun saat Raya bicara
+    var d = (voTujuan.duration && isFinite(voTujuan.duration) && voTujuan.duration > 0) ? voTujuan.duration : TUJUAN_DUR;
+    var speechEnd = TUJUAN_SPEECH_END * (d / TUJUAN_DUR);
+    var per = Math.max(18, Math.floor(speechEnd * 1000 / Math.max(1, tujuanFullText.length)));
+    var c = 0;
+    tujuanTimer = setInterval(function(){
+      c++;
+      tujuanBubbleTxt.textContent = tujuanFullText.slice(0, c);
+      if(c >= tujuanFullText.length){ clearInterval(tujuanTimer); tujuanBubbleTxt.textContent = tujuanFullText; }
+    }, per);
+  }
+  function stopTujuan(){
+    clearInterval(tujuanTimer);
+    tujuanBubbleTxt.textContent = tujuanFullText;
+    try{ voTujuan.pause(); voTujuan.currentTime = 0; }catch(e){}
+    bgm.volume = vol.value/100 * 0.3;
+  }
+  // klik balon = lanjut ke kalimat berikutnya (teks & suara tetap sinkron)
+  function skipIntro(){
+    var t = introTime();
+    for(var i=0;i<introData.length;i++){
+      if(t < introData[i].t1 * ts){
+        var next = Math.min(i + 1, introData.length - 1);
+        if(next !== i){ jumpTo(introData[next].t0 * ts, next); }
+        return;
+      }
+    }
+  }
+  function jumpTo(sec, idx){
+    if(!vo.paused && !vo.ended){ try{ vo.currentTime = sec; }catch(e){} }
+    wallStart = new Date().getTime() - sec * 1000;
+    if(idx != null){ showLine(idx); }
+  }
+  bubble.addEventListener('click', function(){ playKlik(); skipIntro(); });
+
+  // ===== 7. EFEK ANIMASI SAAT DIPENCET (semua tombol) =====
+  // Squash + gelombang + bintang. Berlaku untuk btn-mulai, setting, tutup, toggle.
+  function pressFX(el, useStars){
+    el.addEventListener('pointerdown', function(){
+      // restart animasi squash
+      el.classList.remove('pressed');
+      void el.offsetWidth;
+      el.classList.add('pressed');
+      setTimeout(function(){ el.classList.remove('pressed'); }, 450);
+      // gelombang
+      var ring = document.createElement('span');
+      ring.className = 'press-ring';
+      el.appendChild(ring);
+      setTimeout(function(){ ring.remove(); }, 600);
+      // bintang mental (opsional, hanya tombol utama)
+      if(useStars){
+        for(var i=0;i<7;i++){
+          (function(){
+            var s = document.createElement('span');
+            s.className = 'press-star';
+            var ang = Math.random()*Math.PI*2;
+            var dist = 110 + Math.random()*130;
+            s.style.setProperty('--dx', Math.cos(ang)*dist + 'px');
+            s.style.setProperty('--dy', Math.sin(ang)*dist + 'px');
+            s.style.width = s.style.height = (12 + Math.random()*16) + 'px';
+            el.appendChild(s);
+            setTimeout(function(){ s.remove(); }, 650);
+          })();
+        }
+      }
+    });
+  }
+  pressFX(btnMulai, true);
+  pressFX(btnSetting, false);
+  pressFX(btnSettingMenu, false);
+  pressFX(btnSettingIntro, false);
+  pressFX(btnSettingTujuan, false);
+  pressFX(btnSettingKosong, false);
+  pressFX(btnSettingNext, false);
+  pressFX(btnSettingKpk, false);
+  pressFX(btnHomeMenu, false);
+  pressFX(btnHomeIntro, false);
+  pressFX(btnHomeTujuan, false);
+  pressFX(btnHomeKosong, false);
+  pressFX(btnPrevTujuan, false);
+  pressFX(btnNextTujuan, false);
+  pressFX(btnPrevKosong, false);
+  pressFX(btnNextKosong, false);
+  pressFX(btnPrevMenu, false);
+  pressFX(btnNextMenu, false);
+  pressFX(btnPrevNext, false);
+  pressFX(btnNextNext, false);
+  pressFX(btnHomeNext, false);
+  pressFX(btnPrevKpk, false);
+  pressFX(btnNextKpk, false);
+  pressFX(btnHomeLanjut, false);
+  pressFX(btnHomeJadwal, false);
+  pressFX(btnSettJadwal, false);
+  pressFX(btnPrevJadwal, false);
+  pressFX(btnNextJadwal, false);
+  pressFX(btnSettingLanjut, false);
+  pressFX(btnPrevLanjut, false);
+  pressFX(btnNextLanjut, false);
+  pressFX(btnHomeKpk, false);
+  pressFX(btnMulaiBelajar, false);
+  pressFX(btnTutup, false);
+  pressFX(btnInfo, false);
+  pressFX(btnTutupDev, false);
+  pressFX(tgMusic, false);
+  pressFX(tgSfx, false);
+  pressFX(tgFull, false);
+})();
+</script>
+</body>
+</html>
